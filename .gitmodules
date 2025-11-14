@@ -1,0 +1,3 @@
+[submodule "pixivpy"]
+	path = pixivpy
+	url = https://github.com/upbit/pixivpy
