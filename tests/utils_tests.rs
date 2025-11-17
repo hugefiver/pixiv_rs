@@ -56,17 +56,17 @@ async fn test_extract_extension() {
     assert_eq!(extract_extension("https://example.com/path.to/image"), None);
 }
 
-// 注意：下载测试需要模拟HTTP响应，这里只测试函数调用
-// 实际测试需要mock HTTP客户端或使用测试服务器
+// Note: Download tests need to mock HTTP responses, here we only test function calls
+// Actual tests need to mock HTTP client or use test server
 #[tokio::test]
 async fn test_download_function_exists() {
-    // 这个测试只验证函数存在且可以调用
-    // 实际的下载测试需要更复杂的设置
+    // This test only verifies that the function exists and can be called
+    // Actual download tests need more complex setup
     let client = HttpClient::new().unwrap();
     let path = Path::new("/tmp/test_image.jpg");
     
-    // 由于我们没有真实的图片URL，这里只验证函数签名
-    // 实际使用时需要提供有效的URL
+    // Since we don't have a real image URL, here we only verify the function signature
+    // Actual usage needs to provide a valid URL
     // let result = download(&client, "https://example.com/image.jpg", path).await;
-    // assert!(result.is_ok() || result.is_err()); // 只验证函数可以调用
+    // assert!(result.is_ok() || result.is_err()); // Only verify that the function can be called
 }

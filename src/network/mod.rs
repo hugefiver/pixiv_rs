@@ -6,21 +6,21 @@ use serde::Serialize;
 use std::collections::HashMap;
 use tracing::debug;
 
-/// HTTP客户端，用于与Pixiv API通信
+/// HTTP client for communicating with Pixiv API
 #[derive(Debug, Clone)]
 pub struct HttpClient {
-    /// 内部reqwest客户端
+    /// Internal reqwest client
     pub client: Client,
-    /// 认证令牌
+    /// Authentication token
     access_token: Option<String>,
-    /// 刷新令牌
+    /// Refresh token
     refresh_token: Option<String>,
-    /// API基础URL
+    /// API base URL
     base_url: String,
 }
 
 impl HttpClient {
-    /// 创建新的HTTP客户端实例
+    /// Create new HTTP client instance
     pub fn new() -> Result<Self> {
         let client = Client::builder()
             .user_agent("PixivRustClient/0.1.0")
@@ -35,37 +35,37 @@ impl HttpClient {
         })
     }
 
-    /// 设置认证令牌
+    /// Set authentication token
     pub fn set_access_token(&mut self, token: String) {
         self.access_token = Some(token);
     }
 
-    /// 获取当前认证令牌
+    /// Get current authentication token
     pub fn access_token(&self) -> Option<&str> {
         self.access_token.as_deref()
     }
 
-    /// 设置刷新令牌
+    /// Set refresh token
     pub fn set_refresh_token(&mut self, token: String) {
         self.refresh_token = Some(token);
     }
 
-    /// 获取当前刷新令牌
+    /// Get current refresh token
     pub fn refresh_token(&self) -> Option<&str> {
         self.refresh_token.as_deref()
     }
 
-    /// 发送GET请求
+    /// Send GET request
     pub async fn get(&self, url: &str) -> Result<Response> {
         self.send_request(reqwest::Method::GET, url, None::<&()>).await
     }
 
-    /// 发送POST请求
+    /// Send POST request
     pub async fn post<T: Serialize + ?Sized>(&self, url: &str, body: &T) -> Result<Response> {
         self.send_request(reqwest::Method::POST, url, Some(body)).await
     }
 
-    /// 发送带认证的API请求
+    /// Send authenticated API request
     pub async fn send_request<T: Serialize + ?Sized>(
         &self,
         method: reqwest::Method,
@@ -76,25 +76,25 @@ impl HttpClient {
 
         let mut request = self.client.request(method.clone(), url);
 
-        // 添加认证头
+        // Add authentication header
         if let Some(token) = &self.access_token {
             request = request.header("Authorization", format!("Bearer {}", token));
         }
 
-        // 添加请求体
+        // Add request body
         if let Some(body) = body {
             request = request.json(body);
         }
 
-        // 发送请求
+        // Send request
         let response = request.send().await?;
 
-        // 检查响应状态
+        // Check response status
         if !response.status().is_success() {
             return Err(PixivError::ApiError(format!(
-                "API请求失败: {} - {}",
+                "API request failed: {} - {}",
                 response.status(),
-                response.text().await.unwrap_or_else(|_| "无法获取错误信息".to_string())
+                response.text().await.unwrap_or_else(|_| "Failed to get error information".to_string())
             )));
         }
 
@@ -102,24 +102,24 @@ impl HttpClient {
         Ok(response)
     }
 
-    /// 获取API基础URL
+    /// Get API base URL
     pub fn base_url(&self) -> &str {
         &self.base_url
     }
 
-    /// 设置API基础URL
+    /// Set API base URL
     pub fn set_base_url(&mut self, base_url: String) {
         self.base_url = base_url;
     }
 
-    /// 生成安全校验头
+    /// Generate security headers
     pub fn generate_security_headers(&self) -> HashMap<String, String> {
         use chrono::Utc;
         use md5::compute;
 
         let mut headers = HashMap::new();
         
-        // 生成x-client-time和x-client-hash
+        // Generate x-client-time and x-client-hash
         let local_time = Utc::now().format("%Y-%m-%dT%H:%M:%S+00:00").to_string();
         let hash_input = format!("{}{}", local_time, "28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0bae2c");
         let hash = format!("{:x}", compute(hash_input));

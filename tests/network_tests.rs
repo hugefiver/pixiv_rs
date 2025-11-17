@@ -22,15 +22,15 @@ fn test_security_headers_generation() {
 fn test_token_management() {
     let mut client = HttpClient::new().unwrap();
     
-    // 初始状态应该没有令牌
+    // Initial state should have no tokens
     assert!(client.access_token().is_none());
     assert!(client.refresh_token().is_none());
     
-    // 设置访问令牌
+    // Set access token
     client.set_access_token("test_access_token".to_string());
     assert_eq!(client.access_token(), Some("test_access_token"));
     
-    // 设置刷新令牌
+    // Set refresh token
     client.set_refresh_token("test_refresh_token".to_string());
     assert_eq!(client.refresh_token(), Some("test_refresh_token"));
 }
@@ -39,18 +39,18 @@ fn test_token_management() {
 async fn test_get_request() {
     let client = HttpClient::new().unwrap();
     
-    // 测试一个简单的GET请求
+    // Test a simple GET request
     let result = client.get("https://httpbin.org/get").await;
     
     match result {
         Ok(_) => {
-            // 请求成功
+            // Request successful
         }
         Err(PixivError::NetworkError(_)) => {
-            // 网络错误也是可以接受的，可能是网络问题
+            // Network error is also acceptable, might be network issues
         }
         Err(e) => {
-            panic!("意外的错误类型: {:?}", e);
+            panic!("Unexpected error type: {:?}", e);
         }
     }
 }
@@ -59,7 +59,7 @@ async fn test_get_request() {
 async fn test_post_request() {
     let client = HttpClient::new().unwrap();
     
-    // 测试一个简单的POST请求
+    // Test a simple POST request
     let data = serde_json::json!({
         "key": "value"
     });
@@ -68,13 +68,13 @@ async fn test_post_request() {
     
     match result {
         Ok(_) => {
-            // 请求成功
+            // Request successful
         }
         Err(PixivError::NetworkError(_)) => {
-            // 网络错误也是可以接受的，可能是网络问题
+            // Network error is also acceptable, might be network issues
         }
         Err(e) => {
-            panic!("意外的错误类型: {:?}", e);
+            panic!("Unexpected error type: {:?}", e);
         }
     }
 }

@@ -1,12 +1,12 @@
 use serde::Deserialize;
 use std::collections::HashMap;
 
-/// 关注限制类型
+/// Follow restriction type
 #[derive(Debug, Clone, Copy)]
 pub enum FollowRestrict {
-    /// 公开
+    /// Public
     Public,
-    /// 私密
+    /// Private
     Private,
 }
 
@@ -19,412 +19,412 @@ impl ToString for FollowRestrict {
     }
 }
 
-/// 评论访问控制
+/// Comment access control
 #[derive(Deserialize, Debug, Clone)]
 pub struct CommentAccessControl {
-    /// 是否允许评论
+    /// Whether comments are allowed
     pub allow: bool,
 }
 
-/// 限制属性
+/// Restriction attributes
 #[derive(Deserialize, Debug, Clone)]
 pub struct RestrictionAttributes {
-    /// 限制类型
+    /// Restriction type
     #[serde(rename = "type")]
     pub restriction_type: String,
-    /// 限制值
+    /// Restriction value
     pub value: String,
 }
 
-/// 评论
+/// Comment
 #[derive(Deserialize, Debug, Clone)]
 pub struct Comment {
-    /// 评论ID
+    /// Comment ID
     pub id: u64,
-    /// 评论内容
+    /// Comment content
     pub comment: String,
-    /// 评论日期
+    /// Comment date
     pub date: String,
-    /// 评论用户
+    /// Comment user
     pub user: Option<User>,
-    /// 父评论
+    /// Parent comment
     pub parent_comment: Option<Box<Comment>>,
 }
 
-/// 评论响应
+/// Comment response
 #[derive(Deserialize, Debug, Clone)]
 pub struct CommentsResponse {
-    /// 评论列表
+    /// Comment list
     pub comments: Vec<Comment>,
-    /// 下一页URL
+    /// Next page URL
     pub next_url: Option<String>,
-    /// 总评论数
+    /// Total comment count
     pub total_comments: Option<u32>,
 }
 
-/// 插画关注响应
+/// Illustration follow response
 #[derive(Deserialize, Debug, Clone)]
 pub struct IllustFollowResponse {
-    /// 插画列表
+    /// Illustration list
     pub illusts: Vec<Illust>,
-    /// 下一页URL
+    /// Next page URL
     pub next_url: Option<String>,
 }
 
-/// 插画收藏响应
+/// Illustration bookmark response
 #[derive(Deserialize, Debug, Clone)]
 pub struct IllustBookmarkResponse {
-    /// 是否成功
+    /// Success status
     pub success: bool,
-    /// 错误信息
+    /// Error message
     pub error: Option<String>,
 }
 
-/// 趋势标签响应
+/// Trending tags response
 #[derive(Deserialize, Debug, Clone)]
 pub struct TrendingTagsResponse {
-    /// 趋势标签列表
+    /// Trending tags list
     pub trend_tags: Vec<TrendingTag>,
-    /// 下一页URL
+    /// Next page URL
     pub next_url: Option<String>,
 }
 
-/// 趋势标签
+/// Trending tag
 #[derive(Deserialize, Debug, Clone)]
 pub struct TrendingTag {
-    /// 标签名
+    /// Tag name
     pub tag: String,
-    /// 翻译后的标签名
+    /// Translated tag name
     pub translated_name: Option<String>,
-    /// 插画列表
+    /// Illustration list
     pub illust: Option<Vec<Illust>>,
 }
 
-/// Ugoira元数据响应
+/// Ugoira metadata response
 #[derive(Deserialize, Debug, Clone)]
 pub struct UgoiraMetadataResponse {
-    /// Ugoira元数据
+    /// Ugoira metadata
     pub ugoira_metadata: UgoiraMetadata,
 }
 
-/// Ugoira元数据
+/// Ugoira metadata
 #[derive(Deserialize, Debug, Clone)]
 pub struct UgoiraMetadata {
-    /// 插画ID
+    /// Illustration ID
     pub illust_id: u64,
-    /// 帧延迟列表
+    /// Frame delay list
     pub frames: Vec<UgoiraFrame>,
-    /// MIME类型
+    /// MIME type
     pub mime_type: String,
-    /// 原始文件URL
+    /// Original file URL
     pub original_src: String,
-    /// 文件大小
+    /// File size
     pub zip_urls: ZipUrls,
 }
 
-/// Ugoira帧
+/// Ugoira frame
 #[derive(Deserialize, Debug, Clone)]
 pub struct UgoiraFrame {
-    /// 文件名
+    /// File name
     pub file: String,
-    /// 延迟时间（毫秒）
+    /// Delay time (milliseconds)
     pub delay: u32,
 }
 
-/// ZIP文件URL
+/// ZIP file URLs
 #[derive(Deserialize, Debug, Clone)]
 pub struct ZipUrls {
-    /// 中等大小ZIP文件URL
+    /// Medium size ZIP file URL
     pub medium: String,
-    /// 大尺寸ZIP文件URL
+    /// Large size ZIP file URL
     pub large: String,
-    /// 原始大小ZIP文件URL
+    /// Original size ZIP file URL
     pub original: String,
 }
 
-/// 用户关注响应
+/// User following response
 #[derive(Deserialize, Debug, Clone)]
 pub struct UserFollowingResponse {
-    /// 用户预览列表
+    /// User preview list
     pub user_previews: Vec<UserPreview>,
-    /// 下一页URL
+    /// Next page URL
     pub next_url: Option<String>,
 }
 
-/// 用户粉丝响应
+/// User followers response
 #[derive(Deserialize, Debug, Clone)]
 pub struct UserFollowerResponse {
-    /// 用户预览列表
+    /// User preview list
     pub user_previews: Vec<UserPreview>,
-    /// 下一页URL
+    /// Next page URL
     pub next_url: Option<String>,
 }
 
-/// 用户好P友响应
+/// User mypixiv response
 #[derive(Deserialize, Debug, Clone)]
 pub struct UserMypixivResponse {
-    /// 用户预览列表
+    /// User preview list
     pub user_previews: Vec<UserPreview>,
-    /// 下一页URL
+    /// Next page URL
     pub next_url: Option<String>,
 }
 
-/// 用户预览
+/// User preview
 #[derive(Deserialize, Debug, Clone)]
 pub struct UserPreview {
-    /// 用户信息
+    /// User information
     pub user: User,
-    /// 插画列表
+    /// Illustration list
     pub illusts: Vec<Illust>,
-    /// 小说列表
+    /// Novel list
     pub novels: Option<Vec<Novel>>,
-    /// 是否被静音
+    /// Is muted
     pub is_muted: Option<bool>,
 }
 
-/// 小说信息
+/// Novel information
 #[derive(Deserialize, Debug, Clone)]
 pub struct Novel {
-    /// 小说ID
+    /// Novel ID
     pub id: u64,
-    /// 小说标题
+    /// Novel title
     pub title: String,
-    /// 小说类型
+    /// Novel type
     #[serde(rename = "type")]
     pub novel_type: String,
-    /// 小说说明
+    /// Novel description
     pub caption: String,
-    /// 限制级别
+    /// Restriction level
     pub restrict: u32,
-    /// 用户信息
+    /// User information
     pub user: User,
-    /// 标签列表
+    /// Tag list
     pub tags: Vec<Tag>,
-    /// 创建日期
+    /// Creation date
     pub create_date: String,
-    /// 页数
+    /// Page count
     pub page_count: u32,
-    /// 文本长度
+    /// Text length
     pub text_length: u32,
-    /// 系列信息
+    /// Series information
     pub series: Option<Series>,
-    /// 总浏览数
+    /// Total views
     pub total_view: u64,
-    /// 总收藏数
+    /// Total bookmarks
     pub total_bookmarks: u64,
-    /// 是否已收藏
+    /// Is bookmarked
     pub is_bookmarked: bool,
-    /// 是否可见
+    /// Is visible
     pub visible: bool,
-    /// 是否被静音
+    /// Is muted
     pub is_muted: bool,
-    /// 是否仅限好P友
+    /// Is mypixiv only
     pub is_mypixiv_only: bool,
-    /// 是否X限制
+    /// Is X restricted
     pub is_x_restricted: bool,
-    /// 小说AI类型
+    /// Novel AI type
     pub novel_ai_type: u32,
-    /// 评论访问控制
+    /// Comment access control
     pub comment_access_control: Option<CommentAccessControl>,
 }
 
-/// 图片URL集合
+/// Image URLs collection
 #[derive(Deserialize, Debug, Clone)]
 pub struct ImageUrls {
-    /// 中等方形图片URL
+    /// Medium square image URL
     pub square_medium: String,
-    /// 中等图片URL
+    /// Medium image URL
     pub medium: String,
-    /// 大图片URL
+    /// Large image URL
     pub large: String,
 }
 
-/// 用户头像URL
+/// User avatar URL
 #[derive(Deserialize, Debug, Clone)]
 pub struct ProfileImageUrls {
-    /// 中等头像URL
+    /// Medium avatar URL
     pub medium: String,
 }
 
-/// 用户信息
+/// User information
 #[derive(Deserialize, Debug, Clone)]
 pub struct User {
-    /// 用户ID
+    /// User ID
     pub id: u64,
-    /// 用户名
+    /// Username
     pub name: String,
-    /// 用户账号
+    /// User account
     pub account: String,
-    /// 用户头像URL
+    /// User avatar URL
     pub profile_image_urls: ProfileImageUrls,
-    /// 评论
+    /// Comment
     pub comment: Option<String>,
-    /// 是否已关注
+    /// Is followed
     pub is_followed: Option<bool>,
 }
 
-/// 插画标签
+/// Illustration tag
 #[derive(Deserialize, Debug, Clone)]
 pub struct Tag {
-    /// 标签名
+    /// Tag name
     pub name: String,
-    /// 翻译后的标签名
+    /// Translated tag name
     pub translated_name: Option<String>,
 }
 
-/// 单页元数据
+/// Single page metadata
 #[derive(Deserialize, Debug, Clone)]
 pub struct MetaSinglePage {
-    /// 原始图片URL
+    /// Original image URL
     pub original_image_url: Option<String>,
 }
 
-/// 页面元数据
+/// Page metadata
 #[derive(Deserialize, Debug, Clone)]
 pub struct MetaPage {
-    /// 图片URL
+    /// Image URLs
     pub image_urls: ImageUrls,
 }
 
-/// 系列信息
+/// Series information
 #[derive(Deserialize, Debug, Clone)]
 pub struct Series {
-    /// 系列ID
+    /// Series ID
     pub id: u64,
-    /// 系列标题
+    /// Series title
     pub title: String,
 }
 
-/// 插画信息
+/// Illustration information
 #[derive(Deserialize, Debug, Clone)]
 pub struct Illust {
-    /// 插画ID
+    /// Illustration ID
     pub id: u64,
-    /// 插画标题
+    /// Illustration title
     pub title: String,
-    /// 插画类型
+    /// Illustration type
     #[serde(rename = "type")]
     pub illust_type: String,
-    /// 图片URL
+    /// Image URLs
     pub image_urls: ImageUrls,
-    /// 插画说明
+    /// Illustration description
     pub caption: String,
-    /// 限制级别
+    /// Restriction level
     pub restrict: u32,
-    /// 用户信息
+    /// User information
     pub user: User,
-    /// 标签列表
+    /// Tag list
     pub tags: Vec<Tag>,
-    /// 使用的工具
+    /// Tools used
     pub tools: Vec<String>,
-    /// 创建日期
+    /// Creation date
     pub create_date: String,
-    /// 页数
+    /// Page count
     pub page_count: u32,
-    /// 宽度
+    /// Width
     pub width: u32,
-    /// 高度
+    /// Height
     pub height: u32,
-    /// 审查级别
+    /// Sanity level
     pub sanity_level: u32,
-    /// R-18级别
+    /// R-18 level
     pub x_restrict: u32,
-    /// 系列信息
+    /// Series information
     pub series: Option<Series>,
-    /// 单页元数据
+    /// Single page metadata
     pub meta_single_page: MetaSinglePage,
-    /// 页面元数据
+    /// Page metadata
     pub meta_pages: Vec<MetaPage>,
-    /// 总浏览数
+    /// Total views
     #[serde(rename = "total_view_count")]
     pub total_view: u64,
-    /// 总收藏数
+    /// Total bookmarks
     #[serde(rename = "total_bookmarks_count")]
     pub total_bookmarks: u64,
-    /// 是否已收藏
+    /// Is bookmarked
     pub is_bookmarked: bool,
-    /// 是否可见
+    /// Is visible
     pub visible: bool,
-    /// 是否被静音
+    /// Is muted
     pub is_muted: bool,
-    /// AI类型
+    /// AI type
     pub illust_ai_type: u32,
-    /// 插画书籍风格
+    /// Illustration book style
     pub illust_book_style: u32,
-    /// 总评论数
+    /// Total comments
     pub total_comments: Option<u32>,
-    /// 评论访问控制
+    /// Comment access control
     #[serde(default)]
     pub comment_access_control: Option<CommentAccessControl>,
-    /// 限制属性
+    /// Restriction attributes
     #[serde(default)]
     pub restriction_attributes: Option<Vec<RestrictionAttributes>>,
 }
 
-/// 插画详情响应
+/// Illustration detail response
 #[derive(Deserialize, Debug, Clone)]
 pub struct IllustDetail {
-    /// 插画信息
+    /// Illustration information
     pub illust: Illust,
 }
 
-/// 排行榜响应
+/// Ranking response
 #[derive(Deserialize, Debug, Clone)]
 pub struct RankingResponse {
-    /// 插画列表
+    /// Illustration list
     pub illusts: Vec<Illust>,
-    /// 下一页URL
+    /// Next page URL
     pub next_url: Option<String>,
-    /// 排行榜日期
+    /// Ranking date
     pub date: Option<String>,
-    /// 排行榜模式
+    /// Ranking mode
     pub mode: Option<String>,
 }
 
-/// 推荐响应
+/// Recommendation response
 #[derive(Deserialize, Debug, Clone)]
 pub struct RecommendedResponse {
-    /// 插画列表
+    /// Illustration list
     pub illusts: Vec<Illust>,
-    /// 下一页URL
+    /// Next page URL
     pub next_url: Option<String>,
-    /// 排行榜标签
+    /// Ranking label
     pub ranking_label: Option<RankingLabel>,
 }
 
-/// 排行榜标签
+/// Ranking label
 #[derive(Deserialize, Debug, Clone)]
 pub struct RankingLabel {
-    /// 标签文本
+    /// Label text
     pub text: String,
-    /// 标签类型
+    /// Label type
     #[serde(rename = "type")]
     pub label_type: String,
 }
 
-/// 搜索插画响应
+/// Search illustration response
 #[derive(Deserialize, Debug, Clone)]
 pub struct SearchIllustResponse {
-    /// 插画列表
+    /// Illustration list
     pub illusts: Vec<Illust>,
-    /// 下一页URL
+    /// Next page URL
     pub next_url: Option<String>,
-    /// 搜索跨度限制
+    /// Search span limit
     pub search_span_limit: u32,
-    /// 是否显示AI作品
+    /// Show AI works
     pub show_ai: bool,
 }
 
-/// 搜索目标类型
+/// Search target type
 #[derive(Debug, Clone, Copy)]
 pub enum SearchTarget {
-    /// 标签部分匹配
+    /// Partial match for tags
     PartialMatchForTags,
-    /// 标签完全匹配
+    /// Exact match for tags
     ExactMatchForTags,
-    /// 标题和说明
+    /// Title and caption
     TitleAndCaption,
-    /// 关键词
+    /// Keyword
     Keyword,
 }
 
@@ -439,14 +439,14 @@ impl ToString for SearchTarget {
     }
 }
 
-/// 排序方式
+/// Sort method
 #[derive(Debug, Clone, Copy)]
 pub enum Sort {
-    /// 日期降序
+    /// Date descending
     DateDesc,
-    /// 日期升序
+    /// Date ascending
     DateAsc,
-    /// 热门降序
+    /// Popular descending
     PopularDesc,
 }
 
@@ -460,34 +460,34 @@ impl ToString for Sort {
     }
 }
 
-/// 排行榜模式
+/// Ranking mode
 #[derive(Debug, Clone, Copy)]
 pub enum RankingMode {
-    /// 日榜
+    /// Daily ranking
     Day,
-    /// 周榜
+    /// Weekly ranking
     Week,
-    /// 月榜
+    /// Monthly ranking
     Month,
-    /// 男性日榜
+    /// Daily male ranking
     DayMale,
-    /// 女性日榜
+    /// Daily female ranking
     DayFemale,
-    /// 原创周榜
+    /// Weekly original ranking
     WeekOriginal,
-    /// 新人周榜
+    /// Weekly rookie ranking
     WeekRookie,
-    /// 漫画日榜
+    /// Daily manga ranking
     DayManga,
-    /// R-18日榜
+    /// Daily R-18 ranking
     DayR18,
-    /// R-18男性日榜
+    /// Daily R-18 male ranking
     DayMaleR18,
-    /// R-18女性日榜
+    /// Daily R-18 female ranking
     DayFemaleR18,
-    /// R-18周榜
+    /// Weekly R-18 ranking
     WeekR18,
-    /// R-18G周榜
+    /// Weekly R-18G ranking
     WeekR18g,
 }
 
@@ -511,12 +511,12 @@ impl ToString for RankingMode {
     }
 }
 
-/// 内容类型
+/// Content type
 #[derive(Debug, Clone, Copy)]
 pub enum ContentType {
-    /// 插画
+    /// Illustration
     Illust,
-    /// 漫画
+    /// Manga
     Manga,
 }
 
@@ -529,12 +529,12 @@ impl ToString for ContentType {
     }
 }
 
-/// 过滤器类型
+/// Filter type
 #[derive(Debug, Clone, Copy)]
 pub enum Filter {
-    /// iOS过滤器
+    /// iOS filter
     ForIOS,
-    /// 无过滤器
+    /// No filter
     None,
 }
 
@@ -547,14 +547,14 @@ impl ToString for Filter {
     }
 }
 
-/// 搜索持续时间
+/// Search duration
 #[derive(Debug, Clone, Copy)]
 pub enum Duration {
-    /// 最近一天
+    /// Within last day
     WithinLastDay,
-    /// 最近一周
+    /// Within last week
     WithinLastWeek,
-    /// 最近一月
+    /// Within last month
     WithinLastMonth,
 }
 

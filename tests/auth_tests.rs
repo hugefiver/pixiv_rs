@@ -58,19 +58,19 @@ fn test_token_expiry_check() {
 async fn test_login_with_invalid_credentials() {
     let mut auth_client = AuthClient::new().unwrap();
     
-    // 使用无效的用户名和密码
+    // Use invalid username and password
     let result = auth_client.login("invalid_user", "invalid_password").await;
     
-    // 应该返回认证错误
+    // Should return authentication error
     match result {
         Err(PixivError::AuthError(_)) => {
-            // 这是预期的结果
+            // This is the expected result
         }
         Err(e) => {
-            panic!("预期的认证错误，但得到: {:?}", e);
+            panic!("Expected authentication error, but got: {:?}", e);
         }
         Ok(_) => {
-            panic!("预期的认证错误，但登录成功");
+            panic!("Expected authentication error, but login succeeded");
         }
     }
 }
@@ -79,19 +79,19 @@ async fn test_login_with_invalid_credentials() {
 async fn test_refresh_with_invalid_token() {
     let mut auth_client = AuthClient::new().unwrap();
     
-    // 使用无效的刷新令牌
+    // Use invalid refresh token
     let result = auth_client.refresh_access_token("invalid_refresh_token").await;
     
-    // 应该返回认证错误
+    // Should return authentication error
     match result {
         Err(PixivError::AuthError(_)) => {
-            // 这是预期的结果
+            // This is the expected result
         }
         Err(e) => {
-            panic!("预期的认证错误，但得到: {:?}", e);
+            panic!("Expected authentication error, but got: {:?}", e);
         }
         Ok(_) => {
-            panic!("预期的认证错误，但刷新成功");
+            panic!("Expected authentication error, but refresh succeeded");
         }
     }
 }

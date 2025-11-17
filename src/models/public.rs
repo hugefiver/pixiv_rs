@@ -1,232 +1,232 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-/// 公开API插画信息
+/// Public API illustration information
 #[derive(Deserialize, Debug, Clone)]
 pub struct PublicIllust {
-    /// 插画ID
+    /// Illustration ID
     pub id: u64,
-    /// 插画标题
+    /// Illustration title
     pub title: String,
-    /// 插画类型 (0=插画, 1=漫画, 2=动图)
+    /// Illustration type (0=illustration, 1=manga, 2=ugoira)
     #[serde(rename = "illust_type")]
     pub illust_type: u8,
-    /// 插画标签
+    /// Illustration tags
     pub tags: Vec<String>,
-    /// 插画说明
+    /// Illustration description
     pub caption: String,
-    /// 插画尺寸信息
+    /// Illustration size information
     pub image_urls: ImageUrls,
-    /// 用户信息
+    /// User information
     pub user: PublicUser,
-    /// 创建时间
+    /// Creation time
     pub create_date: String,
-    /// 统计信息
+    /// Statistics information
     pub stats: Option<Stats>,
-    /// 是否为R18内容
+    /// Is R18 content
     pub r18: bool,
-    /// 总页面数
+    /// Total page count
     pub page_count: u32,
-    /// 书签数
+    /// Bookmark count
     pub bookmark_count: Option<u32>,
-    /// 评论数
+    /// Comment count
     pub comment_count: Option<u32>,
-    /// 点击数
+    /// View count
     pub view_count: Option<u32>,
 }
 
-/// 图片URL集合
+/// Image URLs collection
 #[derive(Deserialize, Debug, Clone)]
 pub struct ImageUrls {
-    /// 小图URL
+    /// Small image URL
     pub square_medium: Option<String>,
-    /// 中图URL
+    /// Medium image URL
     pub medium: Option<String>,
-    /// 大图URL
+    /// Large image URL
     pub large: Option<String>,
-    /// 原图URL
+    /// Original image URL
     pub original: Option<String>,
 }
 
-/// 公开API用户信息
+/// Public API user information
 #[derive(Deserialize, Debug, Clone)]
 pub struct PublicUser {
-    /// 用户ID
+    /// User ID
     pub id: u64,
-    /// 用户名
+    /// Username
     pub name: String,
-    /// 用户头像URL
+    /// User avatar URL
     pub profile_image_urls: ProfileImageUrls,
-    /// 是否关注
+    /// Is followed
     pub is_followed: Option<bool>,
 }
 
-/// 头像URL集合
+/// Avatar URL collection
 #[derive(Deserialize, Debug, Clone)]
 pub struct ProfileImageUrls {
-    /// 头像URL
+    /// Avatar URL
     pub px_16x16: Option<String>,
     pub px_50x50: Option<String>,
     pub px_170x170: Option<String>,
 }
 
-/// 统计信息
+/// Statistics information
 #[derive(Deserialize, Debug, Clone)]
 pub struct Stats {
-    /// 书签数
+    /// Bookmark count
     pub bookmarks_count: u32,
-    /// 评论数
+    /// Comment count
     pub comments_count: u32,
-    /// 点击数
+    /// View count
     pub views_count: u32,
-    /// 好评数
+    /// Score
     pub score: u32,
 }
 
-/// 公开API搜索响应
+/// Public API search response
 #[derive(Deserialize, Debug)]
 pub struct PublicSearchResponse {
-    /// 搜索结果列表
+    /// Search result list
     pub illusts: Vec<PublicIllust>,
-    /// 下一页URL（如果有）
+    /// Next page URL (if any)
     pub next_url: Option<String>,
-    /// 搜索元数据
+    /// Search metadata
     pub search_meta: Option<SearchMeta>,
 }
 
-/// 搜索元数据
+/// Search metadata
 #[derive(Deserialize, Debug)]
 pub struct SearchMeta {
-    /// 搜索ID
+    /// Search ID
     pub search_id: String,
-    /// 搜索时间
+    /// Search time
     pub time: u64,
 }
 
-/// 公开API用户详情响应
+/// Public API user detail response
 #[derive(Deserialize, Debug)]
 pub struct PublicUserDetail {
-    /// 用户详情
+    /// User details
     pub user: PublicUser,
-    /// 用户作品列表
+    /// User works list
     pub illusts: HashMap<String, PublicIllust>,
-    /// 用户漫画列表
+    /// User manga list
     pub manga: HashMap<String, PublicIllust>,
-    /// 用户小说列表
+    /// User novel list
     pub novels: HashMap<String, PublicNovel>,
-    /// 用户信息
+    /// User information
     pub profile: UserProfile,
-    /// 用户统计信息
+    /// User statistics information
     pub profile_publicity: UserProfilePublicity,
-    /// 用户工作信息
+    /// User workspace information
     pub workspace: Workspace,
 }
 
-/// 用户小说信息
+/// User novel information
 #[derive(Deserialize, Debug)]
 pub struct PublicNovel {
-    /// 小说ID
+    /// Novel ID
     pub id: u64,
-    /// 小说标题
+    /// Novel title
     pub title: String,
-    /// 小说标签
+    /// Novel tags
     pub tags: Vec<String>,
-    /// 小说说明
+    /// Novel description
     pub caption: String,
-    /// 小说封面URL
+    /// Novel cover URL
     pub image_urls: ImageUrls,
-    /// 作者信息
+    /// Author information
     pub user: PublicUser,
-    /// 创建时间
+    /// Creation time
     pub create_date: String,
-    /// 文字数
+    /// Text length
     pub text_length: u32,
-    /// 总页数
+    /// Total page count
     pub page_count: u32,
-    /// 可视化页数
+    /// Visible page count
     pub visible_page_count: u32,
-    /// 是否为R18内容
+    /// Is R18 content
     pub is_muted: bool,
 }
 
-/// 用户信息
+/// User information
 #[derive(Deserialize, Debug)]
 pub struct UserProfile {
-    /// 生日
+    /// Birthday
     pub birth: String,
-    /// 生日公开度
+    /// Birthday visibility
     pub birth_day: String,
-    /// 生日类型
+    /// Birth year
     pub birth_year: i32,
-    /// 性别
+    /// Gender
     pub gender: String,
-    /// 地区
+    /// Region
     pub region: String,
-    /// 位置
+    /// Address ID
     pub address_id: u32,
-    /// 职业
+    /// Country code
     pub country_code: String,
-    /// 职业ID
+    /// Job
     pub job: String,
     /// 职业ID
     pub job_id: u32,
-    /// 兴趣
+    /// Interests
     pub interests: String,
-    /// 海报URL
+    /// Comment
     pub comment: Option<String>,
-    /// 作品URL
+    /// Webpage
     pub webpage: Option<String>,
-    /// Twitter用户名
+    /// Twitter account
     pub twitter_account: Option<String>,
     /// Twitter URL
     pub twitter_url: Option<String>,
-    /// 背景图片URL
+    /// Pawoo URL
     pub pawoo_url: Option<String>,
-    /// 是否为Pawoo用户
+    /// Is Pawoo user
     pub is_pawoo_user: Option<bool>,
 }
 
-/// 用户信息公开度
+/// User information publicity
 #[derive(Deserialize, Debug)]
 pub struct UserProfilePublicity {
-    /// 生日公开度
+    /// Birthday visibility
     pub birth_day: String,
-    /// 性别公开度
+    /// Gender visibility
     pub gender: String,
-    /// 地区公开度
+    /// Region visibility
     pub region: String,
-    /// 职业公开度
+    /// Job visibility
     pub job: String,
-    /// 兴趣公开度
+    /// Interests visibility
     pub interests: String,
-    /// 作品公开度
+    /// Comment visibility
     pub comment: String,
-    /// 网站公开度
+    /// Webpage visibility
     pub webpage: String,
-    /// Twitter公开度
+    /// Twitter visibility
     pub twitter: String,
-    /// Pawoo公开度
+    /// Pawoo visibility
     pub pawoo: String,
 }
 
-/// 工作空间信息
+/// Workspace information
 #[derive(Deserialize, Debug)]
 pub struct Workspace {
-    /// 桌子
+    /// Desk
     pub desk: Option<String>,
-    /// 椅子
+    /// Chair
     pub chair: Option<String>,
-    /// 操作系统
+    /// Operating system
     pub operating_system: Option<String>,
-    /// 工具
+    /// Tool
     pub tool: Option<String>,
-    /// 评论
+    /// Comment
     pub comment: Option<String>,
-    /// 音乐
+    /// Music
     pub music: Option<String>,
-    /// 茶
+    /// Tea
     pub tea: Option<String>,
-    /// 照片URL
+    /// PC
     pub pc: Option<String>,
     pub monitor: Option<String>,
     pub software: Option<String>,
@@ -241,34 +241,34 @@ pub struct Workspace {
     pub camera: Option<String>,
 }
 
-/// 公开API用户作品响应
+/// Public API user works response
 #[derive(Deserialize, Debug)]
 pub struct PublicUserIllusts {
-    /// 用户作品列表
+    /// User works list
     pub illusts: Vec<PublicIllust>,
-    /// 下一页URL（如果有）
+    /// Next page URL (if any)
     pub next_url: Option<String>,
 }
 
-/// 公开API用户收藏响应
+/// Public API user bookmarks response
 #[derive(Deserialize, Debug)]
 pub struct PublicUserBookmarks {
-    /// 收藏作品列表
+    /// Bookmarked works list
     pub illusts: Vec<PublicIllust>,
-    /// 下一页URL（如果有）
+    /// Next page URL (if any)
     pub next_url: Option<String>,
 }
 
-/// 搜索目标类型
+/// Search target type
 #[derive(Debug, Clone)]
 pub enum SearchTarget {
-    /// 标签部分匹配
+    /// Partial match for tags
     PartialMatchForTags,
-    /// 标签完全匹配
+    /// Exact match for tags
     ExactMatchForTags,
-    /// 标题和说明
+    /// Title and caption
     TitleAndCaption,
-    /// 关键词
+    /// Keyword
     Keyword,
 }
 
@@ -283,14 +283,14 @@ impl std::fmt::Display for SearchTarget {
     }
 }
 
-/// 排序方式
+/// Sort method
 #[derive(Debug, Clone)]
 pub enum Sort {
-    /// 日期降序
+    /// Date descending
     DateDesc,
-    /// 日期升序
+    /// Date ascending
     DateAsc,
-    /// 热门降序
+    /// Popular descending
     PopularDesc,
 }
 
@@ -304,14 +304,14 @@ impl std::fmt::Display for Sort {
     }
 }
 
-/// 内容类型
+/// Content type
 #[derive(Debug, Clone)]
 pub enum ContentType {
-    /// 插画
+    /// Illustration
     Illust,
-    /// 漫画
+    /// Manga
     Manga,
-    /// 动图
+    /// Ugoira
     Ugoira,
 }
 
@@ -325,12 +325,12 @@ impl std::fmt::Display for ContentType {
     }
 }
 
-/// 过滤器类型
+/// Filter type
 #[derive(Debug, Clone)]
 pub enum Filter {
-    /// iOS过滤器
+    /// iOS filter
     ForIOS,
-    /// 无过滤器
+    /// No filter
     None,
 }
 
@@ -343,14 +343,14 @@ impl std::fmt::Display for Filter {
     }
 }
 
-/// 搜索持续时间
+/// Search duration
 #[derive(Debug, Clone)]
 pub enum Duration {
-    /// 最近一天
+    /// Within last day
     WithinLastDay,
-    /// 最近一周
+    /// Within last week
     WithinLastWeek,
-    /// 最近一月
+    /// Within last month
     WithinLastMonth,
 }
 
@@ -364,11 +364,11 @@ impl std::fmt::Display for Duration {
     }
 }
 
-/// 访问限制类型
+/// Access restriction type
 #[derive(Debug, Clone)]
 pub enum Restrict {
-    Public,  // 公开
-    Private, // 私密
+    Public,  // Public
+    Private, // Private
 }
 
 impl std::fmt::Display for Restrict {

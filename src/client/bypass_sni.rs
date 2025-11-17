@@ -8,19 +8,19 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use tracing::debug;
 
-/// 绕过SNI的App API客户端，用于与Pixiv App API交互
+/// App API client with SNI bypass for interacting with Pixiv App API
 ///
-/// 这个客户端通过SNI绕过功能访问Pixiv API，允许在某些网络受限环境下使用。
+/// This client accesses Pixiv API through SNI bypass functionality, allowing usage in certain network-restricted environments.
 ///
-/// # 示例
+/// # Example
 ///
 /// ```rust
 /// use pixiv_rs::client::bypass_sni::BypassSniAppClient;
 ///
-/// // 使用IP地址创建SNI绕过客户端
+/// // Create SNI bypass client using IP address
 /// let client = BypassSniAppClient::with_ip("210.140.131.145")?;
 ///
-/// // 设置访问令牌后使用API
+/// // Use API after setting access token
 /// // client.http_client.set_access_token("your_access_token".to_string());
 /// // let illust = client.illust_detail(12345).await?;
 ///
@@ -28,14 +28,14 @@ use tracing::debug;
 /// ```
 #[derive(Debug, Clone)]
 pub struct BypassSniAppClient {
-    /// SNI绕过HTTP客户端
+    /// SNI bypass HTTP client
     http_client: BypassSniClient,
-    /// API基础URL
+    /// API base URL
     base_url: String,
 }
 
 impl BypassSniAppClient {
-    /// 创建新的绕过SNI的App API客户端实例
+    /// Create new App API client instance with SNI bypass
     pub fn new(http_client: BypassSniClient) -> Self {
         Self {
             http_client,
@@ -43,7 +43,7 @@ impl BypassSniAppClient {
         }
     }
 
-    /// 使用指定IP创建绕过SNI的App API客户端实例
+    /// Create App API client instance with SNI bypass using specified IP
     pub fn with_ip(ip: &str) -> Result<Self> {
         let http_client = BypassSniClient::new(ip)?;
         Ok(Self {
@@ -52,25 +52,25 @@ impl BypassSniAppClient {
         })
     }
 
-    /// 设置API基础URL
+    /// Set API base URL
     pub fn set_base_url(&mut self, url: String) {
         self.base_url = url;
     }
 
-    /// 获取API基础URL
+    /// Get API base URL
     pub fn base_url(&self) -> &str {
         &self.base_url
     }
 
-    /// 获取插画详情
-    /// 
-    /// # 参数
-    /// * `illust_id` - 插画ID
-    /// 
-    /// # 返回
-    /// 返回插画详情信息
-    /// 
-    /// # 示例
+    /// Get illustration details
+    ///
+    /// # Arguments
+    /// * `illust_id` - Illustration ID
+    ///
+    /// # Returns
+    /// Returns illustration detail information
+    ///
+    /// # Example
     /// ```rust
     /// let client = BypassSniAppClient::with_ip("210.140.131.145")?;
     /// let detail = client.illust_detail(12345678).await?;
@@ -92,18 +92,18 @@ impl BypassSniAppClient {
         Ok(detail)
     }
 
-    /// 获取插画排行榜
-    /// 
-    /// # 参数
-    /// * `mode` - 排行榜模式
-    /// * `filter` - 过滤器
-    /// * `date` - 日期 (格式: YYYY-MM-DD)
-    /// * `offset` - 偏移量
-    /// 
-    /// # 返回
-    /// 返回排行榜响应
-    /// 
-    /// # 示例
+    /// Get illustration ranking
+    ///
+    /// # Arguments
+    /// * `mode` - Ranking mode
+    /// * `filter` - Filter
+    /// * `date` - Date (format: YYYY-MM-DD)
+    /// * `offset` - Offset
+    ///
+    /// # Returns
+    /// Returns ranking response
+    ///
+    /// # Example
     /// ```rust
     /// let client = BypassSniAppClient::with_ip("210.140.131.145")?;
     /// let ranking = client.illust_ranking(
@@ -152,23 +152,23 @@ impl BypassSniAppClient {
         Ok(ranking)
     }
 
-    /// 获取推荐插画
-    /// 
-    /// # 参数
-    /// * `content_type` - 内容类型
-    /// * `include_ranking_label` - 是否包含排行榜标签
-    /// * `filter` - 过滤器
-    /// * `max_bookmark_id_for_recommend` - 推荐的最大收藏ID
-    /// * `min_bookmark_id_for_recent_illust` - 最近插画的最小收藏ID
-    /// * `offset` - 偏移量
-    /// * `include_ranking_illusts` - 是否包含排行榜插画
-    /// * `bookmark_illust_ids` - 收藏的插画ID列表
-    /// * `viewed` - 已查看的插画ID列表
-    /// 
-    /// # 返回
-    /// 返回推荐响应
-    /// 
-    /// # 示例
+    /// Get recommended illustrations
+    ///
+    /// # Arguments
+    /// * `content_type` - Content type
+    /// * `include_ranking_label` - Whether to include ranking label
+    /// * `filter` - Filter
+    /// * `max_bookmark_id_for_recommend` - Maximum bookmark ID for recommendation
+    /// * `min_bookmark_id_for_recent_illust` - Minimum bookmark ID for recent illustrations
+    /// * `offset` - Offset
+    /// * `include_ranking_illusts` - Whether to include ranking illustrations
+    /// * `bookmark_illust_ids` - List of bookmarked illustration IDs
+    /// * `viewed` - List of viewed illustration IDs
+    ///
+    /// # Returns
+    /// Returns recommendation response
+    ///
+    /// # Example
     /// ```rust
     /// let client = BypassSniAppClient::with_ip("210.140.131.145")?;
     /// let recommended = client.illust_recommended(
@@ -257,23 +257,23 @@ impl BypassSniAppClient {
         Ok(recommended)
     }
 
-    /// 搜索插画
-    /// 
-    /// # 参数
-    /// * `word` - 搜索关键词
-    /// * `search_target` - 搜索目标
-    /// * `sort` - 排序方式
-    /// * `duration` - 搜索持续时间
-    /// * `start_date` - 开始日期 (格式: YYYY-MM-DD)
-    /// * `end_date` - 结束日期 (格式: YYYY-MM-DD)
-    /// * `filter` - 过滤器
-    /// * `search_ai_type` - AI类型 (0: 过滤AI生成作品, 1: 显示AI生成作品)
-    /// * `offset` - 偏移量
-    /// 
-    /// # 返回
-    /// 返回搜索响应
-    /// 
-    /// # 示例
+    /// Search illustrations
+    ///
+    /// # Arguments
+    /// * `word` - Search keyword
+    /// * `search_target` - Search target
+    /// * `sort` - Sort method
+    /// * `duration` - Search duration
+    /// * `start_date` - Start date (format: YYYY-MM-DD)
+    /// * `end_date` - End date (format: YYYY-MM-DD)
+    /// * `filter` - Filter
+    /// * `search_ai_type` - AI type (0: Filter AI-generated works, 1: Show AI-generated works)
+    /// * `offset` - Offset
+    ///
+    /// # Returns
+    /// Returns search response
+    ///
+    /// # Example
     /// ```rust
     /// let client = BypassSniAppClient::with_ip("210.140.131.145")?;
     /// let search_result = client.search_illust(

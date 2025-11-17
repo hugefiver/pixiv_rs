@@ -10,7 +10,7 @@ fn test_api_error_code_from_str() {
     assert!(matches!(ApiErrorCode::from("400"), ApiErrorCode::BadRequest400));
     assert!(matches!(ApiErrorCode::from("503"), ApiErrorCode::ServiceUnavailable503));
     
-    // 测试未知错误代码
+    // Test unknown error code
     let unknown = ApiErrorCode::from("999");
     assert!(matches!(unknown, ApiErrorCode::Unknown(code) if code == "999"));
 }
@@ -33,37 +33,37 @@ fn test_api_error_code_display() {
 fn test_api_error_details() {
     let details = ApiErrorDetails {
         code: ApiErrorCode::AuthError103,
-        message: "认证失败".to_string(),
+        message: "Authentication failed".to_string(),
         headers: None,
         body: None,
     };
     
     assert!(matches!(details.code, ApiErrorCode::AuthError103));
-    assert_eq!(details.message, "认证失败");
+    assert_eq!(details.message, "Authentication failed");
     assert!(details.headers.is_none());
     assert!(details.body.is_none());
 }
 
 #[test]
 fn test_pixiv_error_display() {
-    let api_error = PixivError::ApiError("API调用失败".to_string());
-    assert_eq!(format!("{}", api_error), "API 错误: API调用失败");
+    let api_error = PixivError::ApiError("API call failed".to_string());
+    assert_eq!(format!("{}", api_error), "API error: API call failed");
     
-    let auth_error = PixivError::AuthError("认证失败".to_string());
-    assert_eq!(format!("{}", auth_error), "认证错误: 认证失败");
+    let auth_error = PixivError::AuthError("Authentication failed".to_string());
+    assert_eq!(format!("{}", auth_error), "Authentication error: Authentication failed");
     
-    let unknown_error = PixivError::Unknown("未知错误".to_string());
-    assert_eq!(format!("{}", unknown_error), "未知错误: 未知错误");
+    let unknown_error = PixivError::Unknown("Unknown error".to_string());
+    assert_eq!(format!("{}", unknown_error), "Unknown error: Unknown error");
     
     let details = ApiErrorDetails {
         code: ApiErrorCode::ServerError500,
-        message: "服务器内部错误".to_string(),
+        message: "Internal server error".to_string(),
         headers: None,
         body: None,
     };
     
     let api_error_with_details = PixivError::ApiErrorWithDetails { details };
     let display_str = format!("{}", api_error_with_details);
-    assert!(display_str.contains("API 错误"));
+    assert!(display_str.contains("API error"));
     assert!(display_str.contains("ServerError500"));
 }

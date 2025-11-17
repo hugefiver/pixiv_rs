@@ -5,35 +5,35 @@ use std::collections::HashMap;
 use std::net::IpAddr;
 use tracing::debug;
 
-/// SNI绕过HTTP客户端，用于绕过网络限制访问Pixiv API
+/// SNI bypass HTTP client for accessing Pixiv API by bypassing network restrictions
 ///
-/// 这个客户端通过指定IP地址来绕过SNI（Server Name Indication）限制，
-/// 从而在某些网络环境下访问Pixiv API。
+/// This client bypasses SNI (Server Name Indication) restrictions by specifying IP address,
+/// allowing access to Pixiv API in certain network environments.
 ///
-/// # 示例
+/// # Example
 ///
 /// ```rust
 /// use pixiv_rs::network::bypass_sni::BypassSniClient;
 ///
-/// // 使用Pixiv API的IP地址创建客户端
+/// // Create client using Pixiv API IP address
 /// let client = BypassSniClient::new("210.140.131.145");
 /// ```
 #[derive(Debug, Clone)]
 pub struct BypassSniClient {
-    /// 内部reqwest客户端
+    /// Internal reqwest client
     pub(crate) client: Client,
-    /// 认证令牌
+    /// Authentication token
     access_token: Option<String>,
-    /// 刷新令牌
+    /// Refresh token
     refresh_token: Option<String>,
-    /// API基础URL
+    /// API base URL
     base_url: String,
-    /// 用于绕过的IP地址
+    /// IP address for bypass
     pub ip: IpAddr,
 }
 
 impl BypassSniClient {
-    /// 创建新的SNI绕过HTTP客户端实例
+    /// Create new SNI bypass HTTP client instance
     pub fn new(ip: &str) -> Result<Self> {
         let ip = ip
             .parse::<std::net::IpAddr>()
@@ -44,9 +44,9 @@ impl BypassSniClient {
 
         tracing::info!(ip = %ip, "Using SNI bypass with IP address");
 
-        // 创建绕过SNI的客户端
+        // Create SNI bypass client
         let mut builder = reqwest::Client::builder();
-        // 使用端口443进行SNI绕过
+        // Use port 443 for SNI bypass
         let socket_addr = std::net::SocketAddr::new(ip, 443);
         builder = builder
             .danger_accept_invalid_certs(true)
@@ -65,37 +65,37 @@ impl BypassSniClient {
         })
     }
 
-    /// 设置认证令牌
+    /// Set authentication token
     pub fn set_access_token(&mut self, token: String) {
         self.access_token = Some(token);
     }
 
-    /// 获取当前认证令牌
+    /// Get current authentication token
     pub fn access_token(&self) -> Option<&str> {
         self.access_token.as_deref()
     }
 
-    /// 设置刷新令牌
+    /// Set refresh token
     pub fn set_refresh_token(&mut self, token: String) {
         self.refresh_token = Some(token);
     }
 
-    /// 获取当前刷新令牌
+    /// Get current refresh token
     pub fn refresh_token(&self) -> Option<&str> {
         self.refresh_token.as_deref()
     }
 
-    /// 发送GET请求
+    /// Send GET request
     pub async fn get(&self, url: &str) -> Result<Response> {
         self.send_request(reqwest::Method::GET, url, None::<&()>).await
     }
 
-    /// 发送POST请求
+    /// Send POST request
     pub async fn post<T: Serialize + ?Sized>(&self, url: &str, body: &T) -> Result<Response> {
         self.send_request(reqwest::Method::POST, url, Some(body)).await
     }
 
-    /// 发送带认证的API请求
+    /// Send authenticated API request
     pub async fn send_request<T: Serialize + ?Sized>(
         &self,
         method: reqwest::Method,
@@ -104,7 +104,7 @@ impl BypassSniClient {
     ) -> Result<Response> {
         debug!(method = %method, url = %url, "Sending API request with SNI bypass");
 
-        // 设置Host头
+        // Set Host header
         let mut headers = reqwest::header::HeaderMap::new();
         headers.insert(
             reqwest::header::HOST,
@@ -113,25 +113,25 @@ impl BypassSniClient {
 
         let mut request = self.client.request(method.clone(), url).headers(headers);
 
-        // 添加认证头
+        // Add authentication header
         if let Some(token) = &self.access_token {
             request = request.header("Authorization", format!("Bearer {}", token));
         }
 
-        // 添加请求体
+        // Add request body
         if let Some(body) = body {
             request = request.json(body);
         }
 
-        // 发送请求
+        // Send request
         let response = request.send().await?;
 
-        // 检查响应状态
+        // Check response status
         if !response.status().is_success() {
             return Err(PixivError::ApiError(format!(
-                "API请求失败: {} - {}",
+                "API request failed: {} - {}",
                 response.status(),
-                response.text().await.unwrap_or_else(|_| "无法获取错误信息".to_string())
+                response.text().await.unwrap_or_else(|_| "Failed to get error information".to_string())
             )));
         }
 
@@ -139,24 +139,24 @@ impl BypassSniClient {
         Ok(response)
     }
 
-    /// 获取API基础URL
+    /// Get API base URL
     pub fn base_url(&self) -> &str {
         &self.base_url
     }
 
-    /// 设置API基础URL
+    /// Set API base URL
     pub fn set_base_url(&mut self, base_url: String) {
         self.base_url = base_url;
     }
 
-    /// 生成安全校验头
+    /// Generate security headers
     pub fn generate_security_headers(&self) -> HashMap<String, String> {
         use chrono::Utc;
         use md5::compute;
 
         let mut headers = HashMap::new();
 
-        // 生成x-client-time和x-client-hash
+        // Generate x-client-time and x-client-hash
         let local_time = Utc::now().format("%Y-%m-%dT%H:%M:%S+00:00").to_string();
         let hash_input = format!("{}{}", local_time, "28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0bae2c");
         let hash = format!("{:x}", compute(hash_input));

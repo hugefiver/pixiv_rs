@@ -10,17 +10,17 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tracing::debug;
 
-/// App API客户端，用于与Pixiv App API交互
+/// App API client for interacting with Pixiv App API
 #[derive(Debug, Clone)]
 pub struct AppClient {
-    /// HTTP客户端
+    /// HTTP client
     http_client: HttpClient,
-    /// API基础URL
+    /// API base URL
     base_url: String,
 }
 
 impl AppClient {
-    /// 创建新的App API客户端实例
+    /// Create new App API client instance
     pub fn new(http_client: HttpClient) -> Self {
         Self {
             http_client,
@@ -28,25 +28,25 @@ impl AppClient {
         }
     }
 
-    /// 设置API基础URL
+    /// Set API base URL
     pub fn set_base_url(&mut self, url: String) {
         self.base_url = url;
     }
 
-    /// 获取API基础URL
+    /// Get API base URL
     pub fn base_url(&self) -> &str {
         &self.base_url
     }
 
-    /// 获取插画详情
-    /// 
-    /// # 参数
-    /// * `illust_id` - 插画ID
-    /// 
-    /// # 返回
-    /// 返回插画详情信息
-    /// 
-    /// # 示例
+    /// Get illustration details
+    ///
+    /// # Arguments
+    /// * `illust_id` - Illustration ID
+    ///
+    /// # Returns
+    /// Returns illustration detail information
+    ///
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let detail = client.illust_detail(12345678).await?;
@@ -68,18 +68,18 @@ impl AppClient {
         Ok(detail)
     }
 
-    /// 获取插画排行榜
-    /// 
-    /// # 参数
-    /// * `mode` - 排行榜模式
-    /// * `filter` - 过滤器
-    /// * `date` - 日期 (格式: YYYY-MM-DD)
-    /// * `offset` - 偏移量
-    /// 
-    /// # 返回
-    /// 返回排行榜响应
-    /// 
-    /// # 示例
+    /// Get illustration ranking
+    ///
+    /// # Arguments
+    /// * `mode` - Ranking mode
+    /// * `filter` - Filter
+    /// * `date` - Date (format: YYYY-MM-DD)
+    /// * `offset` - Offset
+    ///
+    /// # Returns
+    /// Returns ranking response
+    ///
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let ranking = client.illust_ranking(
@@ -128,23 +128,23 @@ impl AppClient {
         Ok(ranking)
     }
 
-    /// 获取推荐插画
-    /// 
-    /// # 参数
-    /// * `content_type` - 内容类型
-    /// * `include_ranking_label` - 是否包含排行榜标签
-    /// * `filter` - 过滤器
-    /// * `max_bookmark_id_for_recommend` - 推荐的最大收藏ID
-    /// * `min_bookmark_id_for_recent_illust` - 最近插画的最小收藏ID
-    /// * `offset` - 偏移量
-    /// * `include_ranking_illusts` - 是否包含排行榜插画
-    /// * `bookmark_illust_ids` - 收藏的插画ID列表
-    /// * `viewed` - 已查看的插画ID列表
-    /// 
-    /// # 返回
-    /// 返回推荐响应
-    /// 
-    /// # 示例
+    /// Get recommended illustrations
+    ///
+    /// # Arguments
+    /// * `content_type` - Content type
+    /// * `include_ranking_label` - Whether to include ranking label
+    /// * `filter` - Filter
+    /// * `max_bookmark_id_for_recommend` - Maximum bookmark ID for recommendation
+    /// * `min_bookmark_id_for_recent_illust` - Minimum bookmark ID for recent illustrations
+    /// * `offset` - Offset
+    /// * `include_ranking_illusts` - Whether to include ranking illustrations
+    /// * `bookmark_illust_ids` - List of bookmarked illustration IDs
+    /// * `viewed` - List of viewed illustration IDs
+    ///
+    /// # Returns
+    /// Returns recommendation response
+    ///
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let recommended = client.illust_recommended(
@@ -233,23 +233,23 @@ impl AppClient {
         Ok(recommended)
     }
 
-    /// 搜索插画
-    /// 
-    /// # 参数
-    /// * `word` - 搜索关键词
-    /// * `search_target` - 搜索目标
-    /// * `sort` - 排序方式
-    /// * `duration` - 搜索持续时间
-    /// * `start_date` - 开始日期 (格式: YYYY-MM-DD)
-    /// * `end_date` - 结束日期 (格式: YYYY-MM-DD)
-    /// * `filter` - 过滤器
-    /// * `search_ai_type` - AI类型 (0: 过滤AI生成作品, 1: 显示AI生成作品)
-    /// * `offset` - 偏移量
-    /// 
-    /// # 返回
-    /// 返回搜索响应
-    /// 
-    /// # 示例
+    /// Search illustrations
+    ///
+    /// # Arguments
+    /// * `word` - Search keyword
+    /// * `search_target` - Search target
+    /// * `sort` - Sort method
+    /// * `duration` - Search duration
+    /// * `start_date` - Start date (format: YYYY-MM-DD)
+    /// * `end_date` - End date (format: YYYY-MM-DD)
+    /// * `filter` - Filter
+    /// * `search_ai_type` - AI type (0: Filter AI-generated works, 1: Show AI-generated works)
+    /// * `offset` - Offset
+    ///
+    /// # Returns
+    /// Returns search response
+    ///
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let search_result = client.search_illust(
@@ -327,16 +327,16 @@ impl AppClient {
         Ok(search_result)
     }
 
-    /// 获取关注用户的插画
+    /// Get illustrations from followed users
     ///
-    /// # 参数
-    /// * `restrict` - 关注限制 (公开/私密)
-    /// * `offset` - 偏移量
+    /// # Arguments
+    /// * `restrict` - Follow restriction (public/private)
+    /// * `offset` - Offset
     ///
-    /// # 返回
-    /// 返回关注用户的插画响应
+    /// # Returns
+    /// Returns response with illustrations from followed users
     ///
-    /// # 示例
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let follow_illusts = client.illust_follow(
@@ -374,17 +374,17 @@ impl AppClient {
         Ok(follow_response)
     }
 
-    /// 获取插画评论
+    /// Get illustration comments
     ///
-    /// # 参数
-    /// * `illust_id` - 插画ID
-    /// * `offset` - 偏移量
-    /// * `include_total_comments` - 是否包含总评论数
+    /// # Arguments
+    /// * `illust_id` - Illustration ID
+    /// * `offset` - Offset
+    /// * `include_total_comments` - Whether to include total comment count
     ///
-    /// # 返回
-    /// 返回评论响应
+    /// # Returns
+    /// Returns comment response
     ///
-    /// # 示例
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let comments = client.illust_comments(
@@ -429,17 +429,17 @@ impl AppClient {
         Ok(comments)
     }
 
-    /// 获取用户关注列表
+    /// Get user following list
     ///
-    /// # 参数
-    /// * `user_id` - 用户ID
-    /// * `restrict` - 关注限制 (公开/私密)
-    /// * `offset` - 偏移量
+    /// # Arguments
+    /// * `user_id` - User ID
+    /// * `restrict` - Follow restriction (public/private)
+    /// * `offset` - Offset
     ///
-    /// # 返回
-    /// 返回用户关注响应
+    /// # Returns
+    /// Returns user following response
     ///
-    /// # 示例
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let following = client.user_following(
@@ -481,17 +481,17 @@ impl AppClient {
         Ok(following)
     }
 
-    /// 获取用户粉丝列表
+    /// Get user followers list
     ///
-    /// # 参数
-    /// * `user_id` - 用户ID
-    /// * `filter` - 过滤器
-    /// * `offset` - 偏移量
+    /// # Arguments
+    /// * `user_id` - User ID
+    /// * `filter` - Filter
+    /// * `offset` - Offset
     ///
-    /// # 返回
-    /// 返回用户粉丝响应
+    /// # Returns
+    /// Returns user followers response
     ///
-    /// # 示例
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let followers = client.user_follower(
@@ -533,16 +533,16 @@ impl AppClient {
         Ok(followers)
     }
 
-    /// 获取用户好P友列表
+    /// Get user mypixiv list
     ///
-    /// # 参数
-    /// * `user_id` - 用户ID
-    /// * `offset` - 偏移量
+    /// # Arguments
+    /// * `user_id` - User ID
+    /// * `offset` - Offset
     ///
-    /// # 返回
-    /// 返回用户好P友响应
+    /// # Returns
+    /// Returns user mypixiv response
     ///
-    /// # 示例
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let mypixiv = client.user_mypixiv(
@@ -580,17 +580,17 @@ impl AppClient {
         Ok(mypixiv)
     }
 
-    /// 添加插画收藏
+    /// Add illustration bookmark
     ///
-    /// # 参数
-    /// * `illust_id` - 插画ID
-    /// * `restrict` - 收藏限制 (公开/私密)
-    /// * `tags` - 标签列表
+    /// # Arguments
+    /// * `illust_id` - Illustration ID
+    /// * `restrict` - Bookmark restriction (public/private)
+    /// * `tags` - Tag list
     ///
-    /// # 返回
-    /// 返回收藏响应
+    /// # Returns
+    /// Returns bookmark response
     ///
-    /// # 示例
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let result = client.illust_bookmark_add(
@@ -632,15 +632,15 @@ impl AppClient {
         Ok(bookmark_response)
     }
 
-    /// 删除插画收藏
+    /// Delete illustration bookmark
     ///
-    /// # 参数
-    /// * `illust_id` - 插画ID
+    /// # Arguments
+    /// * `illust_id` - Illustration ID
     ///
-    /// # 返回
-    /// 返回收藏响应
+    /// # Returns
+    /// Returns bookmark response
     ///
-    /// # 示例
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let result = client.illust_bookmark_delete(12345678).await?;
@@ -669,15 +669,15 @@ impl AppClient {
         Ok(bookmark_response)
     }
 
-    /// 获取趋势标签
+    /// Get trending tags
     ///
-    /// # 参数
-    /// * `filter` - 过滤器
+    /// # Arguments
+    /// * `filter` - Filter
     ///
-    /// # 返回
-    /// 返回趋势标签响应
+    /// # Returns
+    /// Returns trending tags response
     ///
-    /// # 示例
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let trending = client.trending_tags_illust(Filter::ForIOS).await?;
@@ -705,15 +705,15 @@ impl AppClient {
         Ok(trending)
     }
 
-    /// 获取Ugoira元数据
+    /// Get Ugoira metadata
     ///
-    /// # 参数
-    /// * `illust_id` - 插画ID
+    /// # Arguments
+    /// * `illust_id` - Illustration ID
     ///
-    /// # 返回
-    /// 返回Ugoira元数据响应
+    /// # Returns
+    /// Returns Ugoira metadata response
     ///
-    /// # 示例
+    /// # Example
     /// ```rust
     /// let client = AppClient::new(http_client);
     /// let metadata = client.ugoira_metadata(12345678).await?;

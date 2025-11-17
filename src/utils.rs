@@ -1,6 +1,6 @@
-//! 辅助工具模块
+//! Utility module
 //!
-//! 提供Pixiv API相关的辅助功能，包括图片下载、参数解析等。
+//! Provides utility functions for Pixiv API, including image download, parameter parsing, etc.
 
 use crate::error::{PixivError, Result};
 use crate::network::HttpClient;
@@ -10,17 +10,17 @@ use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 use tracing::{debug, info};
 
-/// 下载图片到指定路径
-/// 
-/// # 参数
-/// * `client` - HTTP客户端
-/// * `url` - 图片URL
-/// * `path` - 保存路径
-/// 
-/// # 返回
-/// 返回下载结果
-/// 
-/// # 示例
+/// Download image to specified path
+///
+/// # Arguments
+/// * `client` - HTTP client
+/// * `url` - Image URL
+/// * `path` - Save path
+///
+/// # Returns
+/// Download result
+///
+/// # Example
 /// ```rust
 /// use pixiv_rs::utils::download;
 /// use pixiv_rs::network::HttpClient;
@@ -39,45 +39,45 @@ pub async fn download(
 ) -> Result<()> {
     debug!(url = %url, path = ?path, "Starting download");
     
-    // 发送HTTP请求获取图片
+    // Send HTTP request to get image
     let response = client.get(url).await?;
     
-    // 确保请求成功
+    // Ensure request is successful
     if !response.status().is_success() {
         return Err(PixivError::ApiError(format!(
-            "下载失败: {} - {}",
+            "Download failed: {} - {}",
             response.status(),
-            response.status().canonical_reason().unwrap_or("未知错误")
+            response.status().canonical_reason().unwrap_or("Unknown error")
         )));
     }
     
-    // 获取图片数据
+    // Get image data
     let bytes = response.bytes().await?;
     
-    // 创建目标文件
+    // Create target file
     let mut file = File::create(path).await
-        .map_err(|e| PixivError::Unknown(format!("无法创建文件 {}: {}", path.display(), e)))?;
+        .map_err(|e| PixivError::Unknown(format!("Failed to create file {}: {}", path.display(), e)))?;
     
-    // 写入数据
+    // Write data
     file.write_all(&bytes).await
-        .map_err(|e| PixivError::Unknown(format!("无法写入文件 {}: {}", path.display(), e)))?;
+        .map_err(|e| PixivError::Unknown(format!("Failed to write file {}: {}", path.display(), e)))?;
     
     info!(url = %url, path = ?path, size = bytes.len(), "Download completed");
     
     Ok(())
 }
 
-/// 解析分页参数
-/// 
-/// 从URL中解析查询参数，用于分页请求
-/// 
-/// # 参数
-/// * `url` - 包含查询参数的URL
-/// 
-/// # 返回
-/// 返回解析后的参数映射
-/// 
-/// # 示例
+/// Parse pagination parameters
+///
+/// Parse query parameters from URL for pagination requests
+///
+/// # Arguments
+/// * `url` - URL containing query parameters
+///
+/// # Returns
+/// Returns parsed parameter map
+///
+/// # Example
 /// ```rust
 /// use pixiv_rs::utils::parse_qs;
 /// 
@@ -91,13 +91,13 @@ pub fn parse_qs(url: &str) -> HashMap<String, String> {
     
     let mut result = HashMap::new();
     
-    // 分割URL获取查询部分
+    // Split URL to get query part
     if let Some(query_part) = url.split('?').nth(1) {
-        // 分割参数对
+        // Split parameter pairs
         for pair in query_part.split('&') {
-            // 分割键值
+            // Split key-value
             if let Some((key, value)) = pair.split_once('=') {
-                // URL解码
+                // URL decode
                 if let Ok(decoded_key) = urlencoding::decode(key) {
                     if let Ok(decoded_value) = urlencoding::decode(value) {
                         result.insert(decoded_key.into_owned(), decoded_value.into_owned());
@@ -115,15 +115,15 @@ pub fn parse_qs(url: &str) -> HashMap<String, String> {
     result
 }
 
-/// 设置接受语言
-/// 
-/// 为HTTP客户端设置Accept-Language头
-/// 
-/// # 参数
-/// * `client` - HTTP客户端
-/// * `language` - 语言代码 (如: "zh-CN", "en-US")
-/// 
-/// # 示例
+/// Set accept language
+///
+/// Set Accept-Language header for HTTP client
+///
+/// # Arguments
+/// * `client` - HTTP client
+/// * `language` - Language code (e.g: "zh-CN", "en-US")
+///
+/// # Example
 /// ```rust
 /// use pixiv_rs::utils::set_accept_language;
 /// use pixiv_rs::network::HttpClient;
@@ -134,27 +134,27 @@ pub fn parse_qs(url: &str) -> HashMap<String, String> {
 pub fn set_accept_language(client: &mut HttpClient, language: &str) {
     debug!(language = %language, "Setting Accept-Language header");
     
-    // 注意：这里需要根据实际的HttpClient实现来设置头部
-    // 由于当前的HttpClient结构体可能不直接支持设置自定义头部，
-    // 这个函数可能需要在HttpClient中添加相应的方法
+    // Note: This needs to be implemented according to the actual HttpClient implementation
+    // Since the current HttpClient struct may not directly support setting custom headers,
+    // this function may need to add corresponding methods in HttpClient
     
-    // 示例实现（可能需要根据实际情况调整）:
+    // Example implementation (may need adjustment based on actual situation):
     // client.set_default_header("Accept-Language", language);
     
     debug!(language = %language, "Accept-Language header set");
 }
 
-/// 格式化文件大小
-/// 
-/// 将字节数转换为人类可读的格式
-/// 
-/// # 参数
-/// * `bytes` - 字节数
-/// 
-/// # 返回
-/// 返回格式化后的文件大小字符串
-/// 
-/// # 示例
+/// Format file size
+///
+/// Convert byte count to human-readable format
+///
+/// # Arguments
+/// * `bytes` - Byte count
+///
+/// # Returns
+/// Returns formatted file size string
+///
+/// # Example
 /// ```rust
 /// use pixiv_rs::utils::format_file_size;
 /// 
@@ -180,17 +180,17 @@ pub fn format_file_size(bytes: u64) -> String {
     format!("{:.1} {}", size, UNITS[unit_index])
 }
 
-/// 生成安全的文件名
-/// 
-/// 从字符串生成安全的文件名，移除或替换不安全的字符
-/// 
-/// # 参数
-/// * `input` - 输入字符串
-/// 
-/// # 返回
-/// 返回安全的文件名
-/// 
-/// # 示例
+/// Generate safe filename
+///
+/// Generate safe filename from string, removing or replacing unsafe characters
+///
+/// # Arguments
+/// * `input` - Input string
+///
+/// # Returns
+/// Returns safe filename
+///
+/// # Example
 /// ```rust
 /// use pixiv_rs::utils::safe_filename;
 /// 
@@ -210,15 +210,15 @@ pub fn safe_filename(input: &str) -> String {
         .to_string()
 }
 
-/// 提取URL中的文件扩展名
-/// 
-/// # 参数
-/// * `url` - 图片URL
-/// 
-/// # 返回
-/// 返回文件扩展名（不包含点号）
-/// 
-/// # 示例
+/// Extract file extension from URL
+///
+/// # Arguments
+/// * `url` - Image URL
+///
+/// # Returns
+/// Returns file extension (without dot)
+///
+/// # Example
 /// ```rust
 /// use pixiv_rs::utils::extract_extension;
 /// 
@@ -226,10 +226,10 @@ pub fn safe_filename(input: &str) -> String {
 /// assert_eq!(extract_extension("https://example.com/image.png?size=large"), "png");
 /// ```
 pub fn extract_extension(url: &str) -> Option<String> {
-    // 移除查询参数
+    // Remove query parameters
     let url_without_query = url.split('?').next().unwrap_or(url);
     
-    // 查找最后一个点号，但确保不是路径中的点号
+    // Find the last dot, but ensure it's not a dot in the path
     let path_parts: Vec<&str> = url_without_query.split('/').collect();
     if let Some(file_name) = path_parts.last() {
         if let Some(dot_pos) = file_name.rfind('.') {

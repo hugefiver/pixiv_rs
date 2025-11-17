@@ -8,25 +8,25 @@ use reqwest;
 use serde_json;
 use tracing::debug;
 
-/// Public API客户端，用于访问Pixiv公开API端点
+/// Public API client for accessing Pixiv public API endpoints
 pub struct PublicClient {
     http_client: HttpClient,
 }
 
 impl PublicClient {
-    /// 创建新的PublicClient实例
+    /// Create new PublicClient instance
     pub fn new(http_client: HttpClient) -> Self {
         Self { http_client }
     }
 
-    /// 获取用户详情
+    /// Get user details
     ///
     /// # Arguments
-    /// * `user_id` - 用户ID
-    /// * `filter` - 过滤器（默认为ForIOS）
+    /// * `user_id` - User ID
+    /// * `filter` - Filter (default is ForIOS)
     ///
     /// # Returns
-    /// 返回PublicUserDetail，包含用户详细信息
+    /// Returns PublicUserDetail containing user detailed information
     pub async fn user_detail(
         &self,
         user_id: u64,
@@ -53,21 +53,21 @@ impl PublicClient {
         Ok(user_detail)
     }
 
-    /// 搜索插画
+    /// Search illustrations
     ///
     /// # Arguments
-    /// * `word` - 搜索关键词
-    /// * `search_target` - 搜索目标（默认为PartialMatchForTags）
-    /// * `sort` - 排序方式（默认为DateDesc）
-    /// * `duration` - 搜索持续时间
-    /// * `start_date` - 开始日期
-    /// * `end_date` - 结束日期
-    /// * `filter` - 过滤器（默认为ForIOS）
-    /// * `offset` - 偏移量
-    /// * `search_ai_type` - 搜索AI类型（0: 过滤AI生成作品, 1: 显示AI生成作品）
+    /// * `word` - Search keyword
+    /// * `search_target` - Search target (default is PartialMatchForTags)
+    /// * `sort` - Sort method (default is DateDesc)
+    /// * `duration` - Search duration
+    /// * `start_date` - Start date
+    /// * `end_date` - End date
+    /// * `filter` - Filter (default is ForIOS)
+    /// * `offset` - Offset
+    /// * `search_ai_type` - Search AI type (0: Filter AI-generated works, 1: Show AI-generated works)
     ///
     /// # Returns
-    /// 返回PublicSearchResponse，包含搜索结果
+    /// Returns PublicSearchResponse containing search results
     pub async fn search_illust(
         &self,
         word: &str,
@@ -121,14 +121,14 @@ impl PublicClient {
     }
 
 
-    /// 获取用户作品列表
+    /// Get user works list
     ///
     /// # Arguments
-    /// * `user_id` - 用户ID
-    /// * `offset` - 偏移量（默认为0）
+    /// * `user_id` - User ID
+    /// * `offset` - Offset (default is 0)
     ///
     /// # Returns
-    /// 返回PublicUserIllusts，包含用户作品列表
+    /// Returns PublicUserIllusts containing user works list
     pub async fn user_illusts(
         &self,
         user_id: u64,
@@ -155,15 +155,15 @@ impl PublicClient {
         Ok(user_illusts)
     }
 
-    /// 获取用户收藏的插画
+    /// Get user bookmarked illustrations
     ///
     /// # Arguments
-    /// * `user_id` - 用户ID
-    /// * `restrict` - 限制类型（默认为Public）
-    /// * `offset` - 偏移量（默认为0）
+    /// * `user_id` - User ID
+    /// * `restrict` - Restriction type (default is Public)
+    /// * `offset` - Offset (default is 0)
     ///
     /// # Returns
-    /// 返回PublicUserBookmarks，包含用户收藏的插画列表
+    /// Returns PublicUserBookmarks containing user bookmarked illustrations list
     pub async fn user_bookmarks_illust(
         &self,
         user_id: u64,

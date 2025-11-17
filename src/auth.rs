@@ -5,61 +5,61 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tracing::{debug, info, warn};
 
-/// Pixiv API 认证客户端
+/// Pixiv API authentication client
 #[derive(Debug, Clone)]
 pub struct AuthClient {
-    /// HTTP客户端
+    /// HTTP client
     client: HttpClient,
-    /// 认证基础URL
+    /// Authentication base URL
     auth_url: String,
 }
 
-/// 认证响应数据
+/// Authentication response data
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AuthResponse {
-    /// 访问令牌
+    /// Access token
     pub access_token: String,
-    /// 刷新令牌
+    /// Refresh token
     pub refresh_token: String,
-    /// 令牌类型
+    /// Token type
     pub token_type: String,
-    /// 过期时间（秒）
+    /// Expiration time (seconds)
     pub expires_in: u64,
-    /// 用户信息
+    /// User information
     pub user: User,
-    /// 令牌获取时间
+    /// Token acquisition time
     #[serde(skip)]
     pub obtained_at: DateTime<Utc>,
 }
 
-/// 用户信息
+/// User information
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    /// 用户ID
+    /// User ID
     pub id: u64,
-    /// 用户名
+    /// Username
     pub name: String,
-    /// 账户名
+    /// Account name
     pub account: String,
-    /// 邮箱
+    /// Email
     pub email: Option<String>,
-    /// 头像URL
+    /// Avatar URL
     pub profile_image_urls: ProfileImageUrls,
 }
 
-/// 用户头像URL
+/// User avatar URL
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProfileImageUrls {
-    /// 小尺寸头像
+    /// Small avatar
     pub px_16x16: Option<String>,
-    /// 中尺寸头像
+    /// Medium avatar
     pub px_50x50: Option<String>,
-    /// 大尺寸头像
+    /// Large avatar
     pub px_170x170: Option<String>,
 }
 
 impl AuthClient {
-    /// 创建新的认证客户端
+    /// Create new authentication client
     pub fn new() -> Result<Self> {
         let client = HttpClient::new()?;
         Ok(Self {
@@ -68,14 +68,14 @@ impl AuthClient {
         })
     }
 
-    /// 使用用户名和密码登录
+    /// Login with username and password
     pub async fn login(&mut self, username: &str, password: &str) -> Result<AuthResponse> {
         debug!(username = %username, "Attempting login");
 
-        // 生成安全校验头
+        // Generate security headers
         let security_headers = self.client.generate_security_headers();
 
-        // 构建请求体
+        // Build request body
         let mut form_data = HashMap::new();
         form_data.insert("client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT");
         form_data.insert("client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj");
@@ -84,31 +84,31 @@ impl AuthClient {
         form_data.insert("password", password);
         form_data.insert("get_secure_url", "true");
 
-        // 发送认证请求
+        // Send authentication request
         let mut request = self.client.client.post(&self.auth_url);
         
-        // 添加安全校验头
+        // Add security headers
         for (key, value) in security_headers {
             request = request.header(&key, value);
         }
 
-        // 添加表单数据
+        // Add form data
         request = request.form(&form_data);
 
         let response = request.send().await?;
 
-        // 检查响应状态
+        // Check response status
         if !response.status().is_success() {
-            let error_text = response.text().await.unwrap_or_else(|_| "无法获取错误信息".to_string());
+            let error_text = response.text().await.unwrap_or_else(|_| "Failed to get error information".to_string());
             warn!(error = %error_text, "Login failed");
-            return Err(PixivError::AuthError(format!("登录失败: {}", error_text)));
+            return Err(PixivError::AuthError(format!("Login failed: {}", error_text)));
         }
 
-        // 解析响应
+        // Parse response
         let mut auth_response: AuthResponse = response.json().await?;
         auth_response.obtained_at = Utc::now();
 
-        // 更新客户端的令牌
+        // Update client tokens
         self.client.set_access_token(auth_response.access_token.clone());
         self.client.set_refresh_token(auth_response.refresh_token.clone());
 
@@ -116,14 +116,14 @@ impl AuthClient {
         Ok(auth_response)
     }
 
-    /// 使用刷新令牌获取新的访问令牌
+    /// Get new access token using refresh token
     pub async fn refresh_access_token(&mut self, refresh_token: &str) -> Result<AuthResponse> {
         debug!("Refreshing access token");
 
-        // 生成安全校验头
+        // Generate security headers
         let security_headers = self.client.generate_security_headers();
 
-        // 构建请求体
+        // Build request body
         let mut form_data = HashMap::new();
         form_data.insert("client_id", "MOBrBDS8blbauoSck0ZfDbtuzpyT");
         form_data.insert("client_secret", "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj");
@@ -131,31 +131,31 @@ impl AuthClient {
         form_data.insert("refresh_token", refresh_token);
         form_data.insert("get_secure_url", "true");
 
-        // 发送刷新请求
+        // Send refresh request
         let mut request = self.client.client.post(&self.auth_url);
         
-        // 添加安全校验头
+        // Add security headers
         for (key, value) in security_headers {
             request = request.header(&key, value);
         }
 
-        // 添加表单数据
+        // Add form data
         request = request.form(&form_data);
 
         let response = request.send().await?;
 
-        // 检查响应状态
+        // Check response status
         if !response.status().is_success() {
-            let error_text = response.text().await.unwrap_or_else(|_| "无法获取错误信息".to_string());
+            let error_text = response.text().await.unwrap_or_else(|_| "Failed to get error information".to_string());
             warn!(error = %error_text, "Token refresh failed");
-            return Err(PixivError::AuthError(format!("令牌刷新失败: {}", error_text)));
+            return Err(PixivError::AuthError(format!("Token refresh failed: {}", error_text)));
         }
 
-        // 解析响应
+        // Parse response
         let mut auth_response: AuthResponse = response.json().await?;
         auth_response.obtained_at = Utc::now();
 
-        // 更新客户端的令牌
+        // Update client tokens
         self.client.set_access_token(auth_response.access_token.clone());
         self.client.set_refresh_token(auth_response.refresh_token.clone());
 
@@ -163,22 +163,22 @@ impl AuthClient {
         Ok(auth_response)
     }
 
-    /// 检查访问令牌是否过期
+    /// Check if access token is expired
     pub fn is_token_expired(&self, auth_response: &AuthResponse) -> bool {
         let now = Utc::now();
         let expires_at = auth_response.obtained_at + chrono::Duration::seconds(auth_response.expires_in as i64);
         
-        // 提前5分钟认为令牌过期
+        // Consider token expired 5 minutes in advance
         let buffer = chrono::Duration::minutes(5);
         now + buffer > expires_at
     }
 
-    /// 获取HTTP客户端的可变引用
+    /// Get mutable reference to HTTP client
     pub fn client_mut(&mut self) -> &mut HttpClient {
         &mut self.client
     }
 
-    /// 获取HTTP客户端的不可变引用
+    /// Get immutable reference to HTTP client
     pub fn client(&self) -> &HttpClient {
         &self.client
     }

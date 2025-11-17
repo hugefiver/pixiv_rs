@@ -5,7 +5,7 @@ async fn test_app_client_creation() {
     let http_client = HttpClient::new().unwrap();
     let app_client = AppClient::new(http_client);
     
-    // 测试客户端创建
+    // Test client creation
     assert_eq!(app_client.base_url(), "https://app-api.pixiv.net");
 }
 
