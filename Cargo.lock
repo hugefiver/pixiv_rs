@@ -1099,24 +1099,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pixiv_rs"
-version = "0.1.0"
-dependencies = [
- "async-std",
- "chrono",
- "md5",
- "reqwest",
- "serde",
- "serde_json",
- "smol",
- "thiserror",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "urlencoding",
-]
-
-[[package]]
 name = "pkg-config"
 version = "0.3.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1250,6 +1232,24 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "winreg",
+]
+
+[[package]]
+name = "rsixiv"
+version = "0.1.0"
+dependencies = [
+ "async-std",
+ "chrono",
+ "md5",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "smol",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "urlencoding",
 ]
 
 [[package]]
