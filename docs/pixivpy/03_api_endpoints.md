@@ -25,12 +25,12 @@ Accept-Language: en-us (optional, for tag translations)
 
 ### 1.1 Get Illustration Details
 ```python
-api.illust_detail(illust_id: int) -> IllustrationInfo
+api.illust_detail(illust_id: int) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/illust/detail`
 - **Parameters**:
   - `illust_id`: Illustration ID
-- **Returns**: Complete illustration metadata
+- **Returns**: Complete illustration metadata as parsed JSON (dict)
 
 ### 1.2 Illustration Rankings
 ```python
@@ -61,40 +61,41 @@ api.illust_recommended(
     max_bookmark_id_for_recommend: int = None,
     min_bookmark_id_for_recent_illust: int = None,
     offset: int = None,
-    user_id: int = None,
-    view_records: List[int] = None
-) -> RecommendedInfo
+    include_ranking_illusts: bool = None,
+    bookmark_illust_ids: Union[str, List[Union[int, str]]] = None,
+    include_privacy_policy: Union[str, List[Union[int, str]]] = None,
+    viewed: Union[str, List[str]] = None
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/illust/recommended`
 - **Features**: Personalized recommendations based on user preferences
-- **Returns**: Recommended illustrations with variety
+- **Returns**: Recommended illustrations with variety as parsed JSON (dict)
 
 ### 1.4 Related Illustrations
 ```python
 api.illust_related(
     illust_id: int,
     filter: str = "for_ios",
+    seed_illust_ids: Union[str, List[str]] = None,
     offset: int = None,
-    seed_illust_ids: List[int] = None,
-    view_records: List[int] = None
-) -> RelatedInfo
+    viewed: Union[str, List[str]] = None
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v2/illust/related`
 - **Features**: Illustrations similar to the given one
-- **Returns**: Related works
+- **Returns**: Related works as parsed JSON (dict)
 
 ### 1.5 Following Users' New Works
 ```python
 api.illust_follow(
     restrict: str = "public",
-    filter: str = "for_ios",
     offset: int = None
-) -> FollowingWorksInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v2/illust/follow`
 - **Parameters**:
   - `restrict`: `public` (from public follows) or `private` (from private follows)
-- **Returns**: New illustrations from followed users
+- **Returns**: New illustrations from followed users as parsed JSON (dict)
 
 ### 1.6 Latest Illustrations
 ```python
@@ -102,13 +103,13 @@ api.illust_new(
     content_type: str = "illust",
     filter: str = "for_ios",
     max_illust_id: int = None
-) -> NewWorksInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/illust/new`
 - **Parameters**:
   - `content_type`: `illust` or `manga`
   - `max_illust_id`: Get works older than this ID
-- **Returns**: Latest public illustrations
+- **Returns**: Latest public illustrations as parsed JSON (dict)
 
 ### 1.7 Illustration Comments
 ```python
@@ -116,34 +117,34 @@ api.illust_comments(
     illust_id: int,
     offset: int = None,
     include_total_comments: bool = True
-) -> CommentsInfo
+) -> ParsedJson
 ```
-- **Endpoint**: `GET /v3/illust/comments`
+- **Endpoint**: `GET /v1/illust/comments`
 - **Features**: Pagination support for comments
-- **Returns**: Comment tree structure
+- **Returns**: Comment tree structure as parsed JSON (dict)
 
 ### 1.8 Illustration Bookmarks
 ```python
-api.illust_bookmark_detail(illust_id: int) -> BookmarkDetailInfo
+api.illust_bookmark_detail(illust_id: int) -> ParsedJson
 api.illust_bookmark_add(
     illust_id: int,
     restrict: str = "public",
     tags: List[str] = None
-) -> BookmarkAddResult
-api.illust_bookmark_delete(illust_id: int) -> BookmarkDeleteResult
+) -> ParsedJson
+api.illust_bookmark_delete(illust_id: int) -> ParsedJson
 ```
 - **Endpoints**:
   - `GET /v2/illust/bookmark/detail`
   - `POST /v2/illust/bookmark/add`
   - `POST /v1/illust/bookmark/delete`
-- **Returns**: Bookmark status/result
+- **Returns**: Bookmark status/result as parsed JSON (dict)
 
 ### 1.9 Ugoira Metadata
 ```python
-api.ugoira_metadata(illust_id: int) -> UgoiraMetadataInfo
+api.ugoira_metadata(illust_id: int) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/ugoira/metadata`
-- **Returns**: Metadata for animated illustrations (ugoira)
+- **Returns**: Metadata for animated illustrations (ugoira) as parsed JSON (dict)
 
 ## 2. User APIs
 
@@ -155,7 +156,7 @@ api.user_detail(
 ) -> UserInfoDetailed
 ```
 - **Endpoint**: `GET /v1/user/detail`
-- **Returns**: Complete user profile including stats
+- **Returns**: Complete user profile including stats (Model)
 
 ### 2.2 User's Illustrations
 ```python
@@ -164,12 +165,12 @@ api.user_illusts(
     filter: str = "for_ios",
     offset: int = None,
     type: str = None
-) -> UserWorksInfo
+) -> UserIllustrations
 ```
 - **Endpoint**: `GET /v1/user/illusts`
 - **Parameters**:
   - `type`: `illust`, `manga`, or `None` (both)
-- **Returns**: User's illustration collection
+- **Returns**: User's illustration collection (Model)
 
 ### 2.3 User's Novels
 ```python
@@ -177,10 +178,10 @@ api.user_novels(
     user_id: int,
     filter: str = "for_ios",
     offset: int = None
-) -> UserNovelsInfo
+) -> UserNovels
 ```
 - **Endpoint**: `GET /v1/user/novels`
-- **Returns**: User's novel collection
+- **Returns**: User's novel collection (Model)
 
 ### 2.4 User's Bookmarked Illustrations
 ```python
@@ -190,13 +191,13 @@ api.user_bookmarks_illust(
     filter: str = "for_ios",
     max_bookmark_id: int = None,
     tag: str = None
-) -> UserBookmarksIllustrationsInfo
+) -> UserBookmarksIllustrations
 ```
 - **Endpoint**: `GET /v1/user/bookmarks/illust`
 - **Parameters**:
   - `restrict`: `public` or `private` bookmarks
   - `tag`: Filter by bookmark tag
-- **Returns**: User's bookmarked illustrations
+- **Returns**: User's bookmarked illustrations (Model)
 
 ### 2.5 User's Bookmarked Novels
 ```python
@@ -205,10 +206,10 @@ api.user_bookmarks_novel(
     restrict: str = "public",
     filter: str = "for_ios",
     max_bookmark_id: int = None
-) -> UserBookmarksNovelInfo
+) -> UserBookmarksNovel
 ```
 - **Endpoint**: `GET /v1/user/bookmarks/novel`
-- **Returns**: User's bookmarked novels
+- **Returns**: User's bookmarked novels (Model)
 
 ### 2.6 User's Following List
 ```python
@@ -216,10 +217,10 @@ api.user_following(
     user_id: int,
     restrict: str = "public",
     offset: int = None
-) -> UserFollowingInfo
+) -> UserFollowing
 ```
 - **Endpoint**: `GET /v1/user/following`
-- **Returns**: Users that the target user follows
+- **Returns**: Users that the target user follows (Model)
 
 ### 2.7 User's Followers
 ```python
@@ -227,41 +228,42 @@ api.user_follower(
     user_id: int,
     filter: str = "for_ios",
     offset: int = None
-) -> UserFollowerInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/user/follower`
-- **Returns**: Users that follow the target user
+- **Returns**: Users that follow the target user as parsed JSON (dict)
 
 ### 2.8 Follow/Unfollow User
 ```python
-api.user_follow_add(user_id: int, restrict: str = "public") -> UserFollowingResult
-api.user_follow_delete(user_id: int) -> UserFollowingResult
+api.user_follow_add(user_id: int, restrict: str = "public") -> ParsedJson
+api.user_follow_delete(user_id: int) -> ParsedJson
 ```
 - **Endpoints**:
   - `POST /v1/user/follow/add`
   - `POST /v1/user/follow/delete`
 - **Parameters**:
   - `restrict`: `public` or `private` (for follow)
+- **Returns**: Follow status as parsed JSON (dict)
 
 ### 2.9 Related Users
 ```python
 api.user_related(
     seed_user_id: int,
     filter: str = "for_ios"
-) -> RelatedUsersInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/user/related`
-- **Returns**: Users similar to the seed user
+- **Returns**: Users similar to the seed user as parsed JSON (dict)
 
 ### 2.10 My Pixiv Users
 ```python
 api.user_mypixiv(
     user_id: int,
     offset: int = None
-) -> MyPixivInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/user/mypixiv`
-- **Returns**: "My Pixiv" users list
+- **Returns**: "My Pixiv" users list as parsed JSON (dict)
 
 ### 2.11 User Blacklist
 ```python
@@ -269,10 +271,10 @@ api.user_list(
     user_id: int,
     filter: str = "for_ios",
     offset: int = None
-) -> UserListInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v2/user/list`
-- **Returns**: Blacklisted users
+- **Returns**: Blacklisted users as parsed JSON (dict)
 
 ### 2.12 User Bookmark Tags
 ```python
@@ -280,19 +282,19 @@ api.user_bookmark_tags_illust(
     user_id: int,
     restrict: str = "public",
     offset: int = None
-) -> BookmarkTagsInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/user/bookmark-tags/illust`
-- **Returns**: Tags used in user's bookmarks
+- **Returns**: Tags used in user's bookmarks as parsed JSON (dict)
 
 ### 2.13 User AI Settings
 ```python
-api.user_edit_ai_show_settings(setting: str) -> AIEditResult
+api.user_edit_ai_show_settings(setting: str) -> ParsedJson
 ```
 - **Endpoint**: `POST /v1/user/ai-show-settings/edit`
 - **Parameters**:
   - `setting`: `"true"` or `"false"`
-- **Returns**: Result of updating AI display settings
+- **Returns**: Result of updating AI display settings as parsed JSON (dict)
 
 ## 3. Novel APIs
 
@@ -301,28 +303,28 @@ api.user_edit_ai_show_settings(setting: str) -> AIEditResult
 api.novel_detail(novel_id: int) -> NovelInfo
 ```
 - **Endpoint**: `GET /v2/novel/detail`
-- **Returns**: Complete novel metadata
+- **Returns**: Complete novel metadata (Model)
 
 ### 3.2 Novel Content (Deprecated)
 ```python
-api.novel_text(novel_id: int) -> NovelTextInfo
+api.novel_text(novel_id: int) -> WebviewNovel
 ```
 - **Endpoint**: `GET /v1/novel/text`
 - **Status**: Deprecated, use `webview_novel` instead
 
 ### 3.3 Novel Content (Current)
 ```python
-api.webview_novel(novel_id: int) -> WebViewNovelInfo
+api.webview_novel(novel_id: int) -> WebviewNovel
 ```
 - **Endpoint**: `GET /webview/v2/novel`
-- **Returns**: Formatted novel content
+- **Returns**: Formatted novel content (Model)
 
 ### 3.4 Novel Series
 ```python
-api.novel_series(series_id: int) -> NovelSeriesInfo
+api.novel_series(series_id: int) -> ParsedJson
 ```
 - **Endpoint**: `GET /v2/novel/series`
-- **Returns**: Novel series information
+- **Returns**: Novel series information as parsed JSON (dict)
 
 ### 3.5 Novel Comments
 ```python
@@ -330,10 +332,10 @@ api.novel_comments(
     novel_id: int,
     offset: int = None,
     include_total_comments: bool = True
-) -> NovelCommentsInfo
+) -> NovelComments
 ```
 - **Endpoint**: `GET /v3/novel/comments`
-- **Returns**: Comments on the novel
+- **Returns**: Comments on the novel (Model)
 
 ### 3.6 Following Users' New Novels
 ```python
@@ -341,20 +343,20 @@ api.novel_follow(
     restrict: str = "public",
     filter: str = "for_ios",
     offset: int = None
-) -> NovelFollowInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/novel/follow`
-- **Returns**: New novels from followed users
+- **Returns**: New novels from followed users as parsed JSON (dict)
 
 ### 3.7 Latest Novels
 ```python
 api.novel_new(
     filter: str = "for_ios",
     max_novel_id: int = None
-) -> NewNovelsInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/novel/new`
-- **Returns**: Latest public novels
+- **Returns**: Latest public novels as parsed JSON (dict)
 
 ### 3.8 Recommended Novels
 ```python
@@ -365,10 +367,10 @@ api.novel_recommended(
     include_ranking_novels: bool = None,
     already_recommended: List[str] = None,
     max_bookmark_id_for_recommend: int = None
-) -> RecommendedNovelsInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/novel/recommended`
-- **Returns**: Personalized novel recommendations
+- **Returns**: Personalized novel recommendations as parsed JSON (dict)
 
 ## 4. Search and Discovery APIs
 
@@ -384,23 +386,10 @@ api.search_illust(
     filter: str = "for_ios",
     offset: int = None,
     search_ai_type: int = None
-) -> SearchIllustrationsInfo
+) -> SearchIllustrations
 ```
 - **Endpoint**: `GET /v1/search/illust`
-- **Parameters**:
-  - `word`: Search keyword
-  - `search_target`:
-    - `partial_match_for_tags`: Partial tag match
-    - `exact_match_for_tags`: Exact tag match
-    - `title_and_caption`: Title/caption search
-    - `keyword`: Keyword search
-  - `sort`: `date_desc`, `date_asc`, `popular_desc`
-  - `duration`: `within_last_day`, `within_last_week`, `within_last_month`
-  - `start_date` / `end_date`: Format `YYYY-MM-DD`
-  - `search_ai_type`:
-    - `None`: All content
-    - `1`: Exclude AI content
-    - `2`: Include AI content only
+- **Returns**: Search results (Model)
 
 ### 4.2 Search Novels
 ```python
@@ -416,10 +405,10 @@ api.search_novel(
     filter: str = "for_ios",
     search_ai_type: int = None,
     offset: int = None
-) -> SearchNovelInfo
+) -> SearchNovel
 ```
 - **Endpoint**: `GET /v1/search/novel`
-- **Similar parameters to `search_illust`**
+- **Returns**: Search results (Model)
 
 ### 4.3 Search Users
 ```python
@@ -427,17 +416,18 @@ api.search_user(
     word: str,
     filter: str = "for_ios",
     offset: int = None
-) -> SearchUserInfo
+) -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/search/user`
-- **Returns**: Users matching the search term
+- **Returns**: Users matching the search term as parsed JSON (dict)
 
 ### 4.4 Trending Tags for Illustrations
 ```python
-api.trending_tags_illust(filter: str = "for_ios") -> TrendingTagsInfo
+api.trending_tags_illust(filter: str = "for_ios") -> ParsedJson
 ```
 - **Endpoint**: `GET /v1/trending-tags/illust`
-- **Returns**: Currently trending illustration tags
+- **Returns**: Currently trending illustration tags as parsed JSON (dict)
+
 
 ### 4.5 Trending Tags for Novels
 ```python

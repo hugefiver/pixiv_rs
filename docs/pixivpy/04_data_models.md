@@ -52,76 +52,94 @@ class BaseImageUrls(BaseModel):
 
 ### 1. UserInfo (Basic)
 ```python
-class UserInfo(BaseModel):
+class UserInfo(BasePixivpyModel):
     """Basic user information"""
     id: int
     name: str
     account: str
-    profile_image_urls: BaseImageUrls
-    is_followed: Optional[bool] = None
-    is_muted: Optional[bool] = None
-
-    class Config:
-        allow_population_by_field_name = True
+    profile_image_urls: ProfileImageUrls
+    comment: Optional[str] = None
+    is_followed: Optional[bool]
+    is_access_blocking_user: Optional[bool] = None
+    is_accept_request: Optional[bool] = None
 ```
 
-### 2. UserInfoDetailed
+### 2. ProfileImageUrls
 ```python
-class UserInfoDetailed(BaseModel):
-    """Complete user profile"""
-    id: int
-    name: str
-    account: str
-    profile_image_urls: BaseImageUrls
-    comment: str
-    is_followed: bool
-    is_muted: bool
-    is_blocking: bool
-    is_follower: bool
-    is_friend: bool
-    is_premium: bool
-    background_image_urls: Optional[Dict[str, str]] = None
-    twitter_account: Optional[str] = None
-    twitter_url: Optional[str] = None
-    webpage_url: Optional[str] = None
-    gender: Optional[str] = None
-    birth: Optional[str] = None
-    birth_day: Optional[int] = None
-    birth_month: Optional[int] = None
-    birth_year: Optional[int] = None
-    region: Optional[str] = None
-    address_id: Optional[int] = None
-    country_code: Optional[str] = None
-    job: Optional[str] = None
-    job_id: Optional[int] = None
-    total_followers: int
-    total_following: int
+class ProfileImageUrls(BasePixivpyModel):
+    """User profile image URLs"""
+    medium: str
+```
+
+### 3. Profile
+```python
+class Profile(BasePixivpyModel):
+    """Detailed user profile"""
+    webpage: Optional[str]
+    gender: str
+    birth: str
+    birth_day: str
+    birth_year: int
+    region: str
+    address_id: int
+    country_code: str
+    job: str
+    job_id: int
+    total_follow_users: int
     total_mypixiv_users: int
     total_illusts: int
     total_manga: int
     total_novels: int
-    total_bookmarked_illusts: int
-    total_bookmarked_novels: int
-    total_comments: int
-    total_comments_received: int
-    total_view: int
-    total_like: int
-    total_watching_users: int
-    total_myrequest: int
-    total_diff_importing: int
-    total_diff_use_shop: int
-    total_diff_use_item: int
-    total_group: int
-    profile_partial: Dict[str, Any] = {}
-    user_ad_cooperation_id: Optional[int] = None
-    user_advertiser_id: Optional[int] = None
-    has_booost_promotion: bool
-    following_privacy: Optional[str] = None
-    request_user_status: Optional[Dict[str, Any]] = None
-    can_be_followed: bool
+    total_illust_bookmarks_public: int
+    total_illust_series: int
+    total_novel_series: int
+    background_image_url: str
+    twitter_account: str
+    twitter_url: Optional[str]
+    pawoo_url: Optional[str]
+    is_premium: bool
+    is_using_custom_profile_image: bool
+```
 
-    class Config:
-        allow_population_by_field_name = True
+### 4. ProfilePublicity
+```python
+class ProfilePublicity(BasePixivpyModel):
+    """Profile field visibility settings"""
+    gender: str
+    region: str
+    birth_day: str
+    birth_year: str
+    job: str
+    pawoo: bool
+```
+
+### 5. Workspace
+```python
+class Workspace(BasePixivpyModel):
+    """User workspace info"""
+    pc: str
+    monitor: str
+    tool: str
+    scanner: str
+    tablet: str
+    mouse: str
+    printer: str
+    desktop: str
+    music: str
+    desk: str
+    chair: str
+    comment: str
+    workspace_image_url: Optional[str]
+```
+
+### 6. UserInfoDetailed
+```python
+class UserInfoDetailed(BasePixivpyModel):
+    """Complete user profile structure"""
+    user: UserInfo
+    profile: Profile
+    profile_publicity: ProfilePublicity
+    workspace: Workspace
 ```
 
 ## Illustration Models
