@@ -122,6 +122,29 @@ api.illust_comments(
 - **Features**: Pagination support for comments
 - **Returns**: Comment tree structure
 
+### 1.8 Illustration Bookmarks
+```python
+api.illust_bookmark_detail(illust_id: int) -> BookmarkDetailInfo
+api.illust_bookmark_add(
+    illust_id: int,
+    restrict: str = "public",
+    tags: List[str] = None
+) -> BookmarkAddResult
+api.illust_bookmark_delete(illust_id: int) -> BookmarkDeleteResult
+```
+- **Endpoints**:
+  - `GET /v2/illust/bookmark/detail`
+  - `POST /v2/illust/bookmark/add`
+  - `POST /v1/illust/bookmark/delete`
+- **Returns**: Bookmark status/result
+
+### 1.9 Ugoira Metadata
+```python
+api.ugoira_metadata(illust_id: int) -> UgoiraMetadataInfo
+```
+- **Endpoint**: `GET /v1/ugoira/metadata`
+- **Returns**: Metadata for animated illustrations (ugoira)
+
 ## 2. User APIs
 
 ### 2.1 User Profile
@@ -230,6 +253,47 @@ api.user_related(
 - **Endpoint**: `GET /v1/user/related`
 - **Returns**: Users similar to the seed user
 
+### 2.10 My Pixiv Users
+```python
+api.user_mypixiv(
+    user_id: int,
+    offset: int = None
+) -> MyPixivInfo
+```
+- **Endpoint**: `GET /v1/user/mypixiv`
+- **Returns**: "My Pixiv" users list
+
+### 2.11 User Blacklist
+```python
+api.user_list(
+    user_id: int,
+    filter: str = "for_ios",
+    offset: int = None
+) -> UserListInfo
+```
+- **Endpoint**: `GET /v2/user/list`
+- **Returns**: Blacklisted users
+
+### 2.12 User Bookmark Tags
+```python
+api.user_bookmark_tags_illust(
+    user_id: int,
+    restrict: str = "public",
+    offset: int = None
+) -> BookmarkTagsInfo
+```
+- **Endpoint**: `GET /v1/user/bookmark-tags/illust`
+- **Returns**: Tags used in user's bookmarks
+
+### 2.13 User AI Settings
+```python
+api.user_edit_ai_show_settings(setting: str) -> AIEditResult
+```
+- **Endpoint**: `POST /v1/user/ai-show-settings/edit`
+- **Parameters**:
+  - `setting`: `"true"` or `"false"`
+- **Returns**: Result of updating AI display settings
+
 ## 3. Novel APIs
 
 ### 3.1 Novel Details
@@ -282,6 +346,30 @@ api.novel_follow(
 - **Endpoint**: `GET /v1/novel/follow`
 - **Returns**: New novels from followed users
 
+### 3.7 Latest Novels
+```python
+api.novel_new(
+    filter: str = "for_ios",
+    max_novel_id: int = None
+) -> NewNovelsInfo
+```
+- **Endpoint**: `GET /v1/novel/new`
+- **Returns**: Latest public novels
+
+### 3.8 Recommended Novels
+```python
+api.novel_recommended(
+    include_ranking_label: bool = True,
+    filter: str = "for_ios",
+    offset: int = None,
+    include_ranking_novels: bool = None,
+    already_recommended: List[str] = None,
+    max_bookmark_id_for_recommend: int = None
+) -> RecommendedNovelsInfo
+```
+- **Endpoint**: `GET /v1/novel/recommended`
+- **Returns**: Personalized novel recommendations
+
 ## 4. Search and Discovery APIs
 
 ### 4.1 Search Illustrations
@@ -291,10 +379,10 @@ api.search_illust(
     search_target: str = "partial_match_for_tags",
     sort: str = "date_desc",
     duration: str = None,
+    start_date: str = None,
+    end_date: str = None,
     filter: str = "for_ios",
     offset: int = None,
-    merge_plain_keyword_results: bool = True,
-    include_translated_tag_results: bool = True,
     search_ai_type: int = None
 ) -> SearchIllustrationsInfo
 ```
@@ -308,6 +396,7 @@ api.search_illust(
     - `keyword`: Keyword search
   - `sort`: `date_desc`, `date_asc`, `popular_desc`
   - `duration`: `within_last_day`, `within_last_week`, `within_last_month`
+  - `start_date` / `end_date`: Format `YYYY-MM-DD`
   - `search_ai_type`:
     - `None`: All content
     - `1`: Exclude AI content
@@ -322,7 +411,10 @@ api.search_novel(
     merge_plain_keyword_results: bool = True,
     include_translated_tag_results: bool = True,
     duration: str = None,
+    start_date: str = None,
+    end_date: str = None,
     filter: str = "for_ios",
+    search_ai_type: int = None,
     offset: int = None
 ) -> SearchNovelInfo
 ```
@@ -385,6 +477,14 @@ api.download(
   - File extension detection
   - Resume support
 - **Returns**: Downloaded file path
+
+### 5.3 Showcase Article
+```python
+api.showcase_article(showcase_id: int) -> ShowcaseInfo
+```
+- **Endpoint**: `GET https://www.pixiv.net/ajax/showcase/article`
+- **Note**: This is a Web API call (no authentication required, mocks Chrome User-Agent)
+- **Returns**: Article content and metadata
 
 ## 6. Response Models
 
