@@ -17,16 +17,16 @@ fn test_api_error_code_from_str() {
 
 #[test]
 fn test_api_error_code_display() {
-    assert_eq!(format!("{}", ApiErrorCode::AuthError103), "认证错误 (103)");
-    assert_eq!(format!("{}", ApiErrorCode::ServerError500), "服务器错误 (500)");
-    assert_eq!(format!("{}", ApiErrorCode::TooManyRequests429), "请求过多 (429)");
-    assert_eq!(format!("{}", ApiErrorCode::NotFound404), "未找到 (404)");
-    assert_eq!(format!("{}", ApiErrorCode::Forbidden403), "禁止访问 (403)");
-    assert_eq!(format!("{}", ApiErrorCode::BadRequest400), "错误请求 (400)");
-    assert_eq!(format!("{}", ApiErrorCode::ServiceUnavailable503), "服务不可用 (503)");
+    assert_eq!(format!("{}", ApiErrorCode::AuthError103), "Authentication error (103)");
+    assert_eq!(format!("{}", ApiErrorCode::ServerError500), "Server error (500)");
+    assert_eq!(format!("{}", ApiErrorCode::TooManyRequests429), "Too many requests (429)");
+    assert_eq!(format!("{}", ApiErrorCode::NotFound404), "Not found (404)");
+    assert_eq!(format!("{}", ApiErrorCode::Forbidden403), "Forbidden (403)");
+    assert_eq!(format!("{}", ApiErrorCode::BadRequest400), "Bad request (400)");
+    assert_eq!(format!("{}", ApiErrorCode::ServiceUnavailable503), "Service unavailable (503)");
     
     let unknown = ApiErrorCode::Unknown("999".to_string());
-    assert_eq!(format!("{}", unknown), "未知错误代码: 999");
+    assert_eq!(format!("{}", unknown), "Unknown error code: 999");
 }
 
 #[test]

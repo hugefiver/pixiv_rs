@@ -36,13 +36,11 @@
 pub mod auth;
 pub mod client {
     pub mod app;
-    pub mod public;
     pub mod bypass_sni;
 }
 pub mod error;
 pub mod models {
     pub mod app;
-    pub mod public;
 }
 pub mod network;
 pub mod utils;
@@ -50,7 +48,6 @@ pub mod utils;
 // Re-export common types and functions
 pub use auth::{AuthClient, AuthResponse, User as AuthUser};
 pub use client::app::AppClient;
-pub use client::public::PublicClient;
 pub use client::bypass_sni::BypassSniAppClient;
 
 /// Example of using SNI bypass feature
@@ -80,11 +77,6 @@ pub use models::app::{
     SearchIllustResponse, SearchTarget, Series, Sort, Tag, TrendingTag, TrendingTagsResponse,
     UgoiraFrame, UgoiraMetadata, UgoiraMetadataResponse, User as AppUser, UserFollowerResponse,
     UserFollowingResponse, UserMypixivResponse, UserPreview, ZipUrls,
-};
-pub use models::public::{
-    PublicIllust, PublicUser, PublicSearchResponse, PublicUserDetail, PublicUserIllusts, PublicUserBookmarks,
-    PublicSearchResponse as PublicSearchIllustResponse, SearchTarget as PublicSearchTarget, Sort as PublicSort,
-    Restrict as PublicRestrict, ContentType as PublicContentType, Duration as PublicDuration, Filter as PublicFilter
 };
 pub use network::HttpClient;
 pub use utils::{download, extract_extension, format_file_size, parse_qs, safe_filename, set_accept_language};

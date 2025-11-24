@@ -123,6 +123,10 @@ pub enum PixivError {
     /// SNI bypass error
     #[error("SNI bypass error: {0}")]
     SniBypassError(#[from] SniBypassError),
+    
+    /// Other error type
+    #[error("Other error: {0}")]
+    Other(String),
 }
 
 /// Network related errors
@@ -160,6 +164,12 @@ pub enum SniBypassError {
 impl From<reqwest::Error> for PixivError {
     fn from(err: reqwest::Error) -> Self {
         PixivError::NetworkError(NetworkError::RequestError(err))
+    }
+}
+
+impl From<regex::Error> for PixivError {
+    fn from(err: regex::Error) -> Self {
+        PixivError::Other(format!("Regex error: {}", err))
     }
 }
 

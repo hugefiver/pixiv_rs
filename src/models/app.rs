@@ -160,6 +160,138 @@ pub struct UserFollowerResponse {
     pub next_url: Option<String>,
 }
 
+/// Illustration related response
+#[derive(Deserialize, Debug, Clone)]
+pub struct IllustRelatedResponse {
+    /// Illustration list
+    pub illusts: Vec<Illust>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// Illustration bookmark detail response
+#[derive(Deserialize, Debug, Clone)]
+pub struct IllustBookmarkDetailResponse {
+    /// User bookmark illust
+    pub user_bookmark_illust: UserBookmarkIllust,
+}
+
+/// User bookmark illust
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserBookmarkIllust {
+    /// Bookmark ID
+    pub id: u64,
+    /// Is private
+    pub is_private: bool,
+    /// Tag list
+    pub tags: Vec<Tag>,
+    /// Restrict
+    pub restrict: String,
+}
+
+/// Illustration new response
+#[derive(Deserialize, Debug, Clone)]
+pub struct IllustNewResponse {
+    /// Illustration list
+    pub illusts: Vec<Illust>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// User related response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserRelatedResponse {
+    /// User preview list
+    pub user_previews: Vec<UserPreview>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// User recommended response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserRecommendedResponse {
+    /// User preview list
+    pub user_previews: Vec<UserPreview>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// User list response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserListResponse {
+    /// User preview list
+    pub user_previews: Vec<UserPreview>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// User follow delete response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserFollowDeleteResponse {
+    /// Success status
+    pub success: bool,
+    /// Error message
+    pub error: Option<String>,
+}
+
+/// User bookmark tags illust response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserBookmarkTagsIllustResponse {
+    /// Bookmark tags list
+    pub bookmark_tags: Vec<BookmarkTag>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// Bookmark tag
+#[derive(Deserialize, Debug, Clone)]
+pub struct BookmarkTag {
+    /// Tag name
+    pub name: String,
+    /// Translated tag name
+    pub translated_name: Option<String>,
+    /// Is private
+    pub is_private: bool,
+    /// Illusts
+    pub illusts: Option<Vec<Illust>>,
+}
+
+/// User edit AI show settings response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserEditAiShowSettingsResponse {
+    /// Success status
+    pub success: bool,
+    /// Error message
+    pub error: Option<String>,
+}
+
+/// Search user response
+#[derive(Deserialize, Debug, Clone)]
+pub struct SearchUserResponse {
+    /// User preview list
+    pub user_previews: Vec<UserPreview>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// User follow add response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserFollowAddResponse {
+    /// Success status
+    pub success: bool,
+    /// Error message
+    pub error: Option<String>,
+}
+
+/// User illustrations response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserIllustrationsResponse {
+    /// Illustration list
+    pub illusts: Vec<Illust>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
 /// User mypixiv response
 #[derive(Deserialize, Debug, Clone)]
 pub struct UserMypixivResponse {
@@ -564,6 +696,174 @@ impl ToString for Duration {
             Duration::WithinLastDay => "within_last_day".to_string(),
             Duration::WithinLastWeek => "within_last_week".to_string(),
             Duration::WithinLastMonth => "within_last_month".to_string(),
+        }
+    }
+}
+
+/// User novels response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserNovelsResponse {
+    /// Novel list
+    pub novels: Vec<Novel>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// Novel series detail
+#[derive(Deserialize, Debug, Clone)]
+pub struct NovelSeriesDetail {
+    /// Series ID
+    pub id: u64,
+    /// Series title
+    pub title: String,
+    /// Series caption
+    pub caption: String,
+    /// User information
+    pub user: User,
+    /// Tag list
+    pub tags: Vec<Tag>,
+    /// Creation date
+    pub create_date: String,
+    /// Page count
+    pub page_count: u32,
+    /// Text length
+    pub text_length: u32,
+    /// Total series
+    pub total_series: u32,
+    /// Total novels
+    pub total_novels: u32,
+    /// Total views
+    pub total_view: u64,
+    /// Total bookmarks
+    pub total_bookmarks: u64,
+    /// Is bookmarked
+    pub is_bookmarked: bool,
+    /// Is visible
+    pub visible: bool,
+    /// Is muted
+    pub is_muted: bool,
+    /// Is mypixiv only
+    pub is_mypixiv_only: bool,
+    /// Is X restricted
+    pub is_x_restricted: bool,
+    /// Novel AI type
+    pub novel_ai_type: u32,
+    /// Comment access control
+    pub comment_access_control: Option<CommentAccessControl>,
+}
+
+/// Novel series response
+#[derive(Deserialize, Debug, Clone)]
+pub struct NovelSeriesResponse {
+    /// Novel series detail
+    pub novel_series_detail: NovelSeriesDetail,
+    /// Novel list
+    pub novels: Vec<Novel>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// Novel new response
+#[derive(Deserialize, Debug, Clone)]
+pub struct NovelNewResponse {
+    /// Novel list
+    pub novels: Vec<Novel>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// Novel follow response
+#[derive(Deserialize, Debug, Clone)]
+pub struct NovelFollowResponse {
+    /// Novel list
+    pub novels: Vec<Novel>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// Novel recommended response
+#[derive(Deserialize, Debug, Clone)]
+pub struct NovelRecommendedResponse {
+    /// Novel list
+    pub novels: Vec<Novel>,
+    /// Next page URL
+    pub next_url: Option<String>,
+    /// Ranking label
+    pub ranking_label: Option<RankingLabel>,
+}
+
+/// Search novel response
+#[derive(Deserialize, Debug, Clone)]
+pub struct SearchNovelResponse {
+    /// Novel list
+    pub novels: Vec<Novel>,
+    /// Next page URL
+    pub next_url: Option<String>,
+    /// Search span limit
+    pub search_span_limit: u32,
+    /// Show AI works
+    pub show_ai: bool,
+}
+
+/// User bookmarks novel response
+#[derive(Deserialize, Debug, Clone)]
+pub struct UserBookmarksNovelResponse {
+    /// Novel list
+    pub novels: Vec<Novel>,
+    /// Next page URL
+    pub next_url: Option<String>,
+}
+
+/// Webview novel response
+#[derive(Deserialize, Debug, Clone)]
+pub struct WebviewNovelResponse {
+    /// Novel information
+    pub novel: Novel,
+    /// Novel text
+    pub novel_text: String,
+}
+
+/// Search target type for novels
+#[derive(Debug, Clone, Copy)]
+pub enum NovelSearchTarget {
+    /// Partial match for tags
+    PartialMatchForTags,
+    /// Exact match for tags
+    ExactMatchForTags,
+    /// Text
+    Text,
+    /// Keyword
+    Keyword,
+}
+
+impl ToString for NovelSearchTarget {
+    fn to_string(&self) -> String {
+        match self {
+            NovelSearchTarget::PartialMatchForTags => "partial_match_for_tags".to_string(),
+            NovelSearchTarget::ExactMatchForTags => "exact_match_for_tags".to_string(),
+            NovelSearchTarget::Text => "text".to_string(),
+            NovelSearchTarget::Keyword => "keyword".to_string(),
+        }
+    }
+}
+
+/// Follow restriction type for novels
+#[derive(Debug, Clone, Copy)]
+pub enum NovelFollowRestrict {
+    /// Public
+    Public,
+    /// Private
+    Private,
+    /// All
+    All,
+}
+
+impl ToString for NovelFollowRestrict {
+    fn to_string(&self) -> String {
+        match self {
+            NovelFollowRestrict::Public => "public".to_string(),
+            NovelFollowRestrict::Private => "private".to_string(),
+            NovelFollowRestrict::All => "all".to_string(),
         }
     }
 }
