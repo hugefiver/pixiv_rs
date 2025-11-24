@@ -1,5 +1,5 @@
 [package]
-name = "pixivrs"
+name = "pixiv_rs"
 version = "0.1.0"
 edition = "2021"
 description = "Pixiv client writen in Rust"
